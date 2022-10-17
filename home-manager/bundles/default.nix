@@ -3,7 +3,7 @@
   imports = [
     ./cli_tools.nix
     ./dev_envs
-    ./nvim.nix
+    ./nvim
     ./secrets.nix
     ./terminal.nix
   ];
