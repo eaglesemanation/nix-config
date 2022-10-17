@@ -16,7 +16,7 @@
   nix = {
     package = pkgs.nix;
     settings = {
-      experimental-features = [ "nix-command" "flakes" "repl-flake" ];
+      experimental-features = [ "nix-command" "flakes" ];
       # Disable annoying warning about flake git repo being dirty
       warn-dirty = false;
     };

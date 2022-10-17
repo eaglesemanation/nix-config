@@ -34,6 +34,9 @@ in {
       (nerdfonts.override { fonts = [ cfg.font ]; })
     ];
 
+    # Include helpful cli tools by default
+    bundles.cli_tools.enable = true;
+
     # Terminal emulator
     programs.alacritty = let
       font = "${cfg.font} Nerd Font Mono";

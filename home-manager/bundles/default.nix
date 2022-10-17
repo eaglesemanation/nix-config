@@ -10,7 +10,6 @@
   
   bundles = {
     terminal.enable = true;
-    cli_tools.enable = true;
     nvim.enable = true;
   };
 }
