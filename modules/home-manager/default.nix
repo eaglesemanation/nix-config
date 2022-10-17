@@ -1,0 +1,3 @@
+{
+  neovide = import ./neovide.nix;
+}
