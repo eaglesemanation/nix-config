@@ -10,6 +10,9 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    # Automatic linting and formatting on commit
+    pre-commit-hooks.url = "github:cachix/pre-commit-hooks.nix";
+
     # sops (secrets operations) integration with nix
     sops-nix = {
       url = "github:mic92/sops-nix";
@@ -33,28 +36,38 @@
 
   };
 
-  outputs = { self, nixpkgs, home-manager, utils, ... }@inputs:
+  outputs =
+    { self, nixpkgs, home-manager, utils, pre-commit-hooks, ... }@inputs:
     let
       inherit (self) outputs;
       supportedSystems = builtins.attrValues {
         inherit (utils.lib.system) x86_64-linux aarch64-linux;
       };
-    in
-    rec {
+    in rec {
       overlays = import ./overlay;
 
       nixosModules = import ./modules/nixos;
       homeManagerModules = import ./modules/home-manager;
 
-      # Devshell for bootstrapping
-      # Acessible through 'nix develop' or 'nix-shell' (legacy)
-      devShells = utils.lib.eachSystemMap supportedSystems (system: {
-        default = legacyPackages.${system}.callPackage ./shell.nix { };
+      checks = utils.lib.eachSystemMap supportedSystems (system: {
+        pre-commit-check = pre-commit-hooks.lib.${system}.run {
+          src = ./.;
+          # Checking on each commit is annoying, only check on push
+          default_stages = [ "manual" "push" ];
+          hooks = { nixfmt.enable = true; };
+        };
       });
+
+      # Dev shell with pre-commit hooks automatically configured
+      devShells = utils.lib.eachSystemMap supportedSystems (system: {
+        default = legacyPackages.${system}.mkShell {
+          inherit (self.checks.${system}.pre-commit-check) shellHook;
+        };
+      });
+
       # Additional derivations
-      packages = utils.lib.eachSystemMap supportedSystems (system:
-        import ./pkgs { pkgs = legacyPackages.${system}; }
-      );
+      packages = utils.lib.eachSystemMap supportedSystems
+        (system: import ./pkgs { pkgs = legacyPackages.${system}; });
 
       # This instantiates nixpkgs for each system listed above
       legacyPackages = utils.lib.eachSystemMap supportedSystems (system:
@@ -66,14 +79,12 @@
             # https://github.com/nix-community/fenix/issues/79
             fenix = (_: super:
               let
-                pkgs = inputs.fenix.inputs.nixpkgs.legacyPackages.${super.system};
-              in
-              inputs.fenix.overlay pkgs pkgs
-            );
+                pkgs =
+                  inputs.fenix.inputs.nixpkgs.legacyPackages.${super.system};
+              in inputs.fenix.overlay pkgs pkgs);
           };
           config.allowUnfree = true;
-        }
-      );
+        });
 
       nixosConfigurations = {
         ## FIXME replace with your hostname
@@ -88,11 +99,12 @@
       };
 
       homeConfigurations = {
-        "eaglesemanation@emnt-x280" = home-manager.lib.homeManagerConfiguration {
-          pkgs = legacyPackages.x86_64-linux;
-          extraSpecialArgs = { inherit inputs outputs; };
-          modules = [ (./home-manager + "/eaglesemanation@emnt-x280.nix") ];
-        };
+        "eaglesemanation@emnt-x280" =
+          home-manager.lib.homeManagerConfiguration {
+            pkgs = legacyPackages.x86_64-linux;
+            extraSpecialArgs = { inherit inputs outputs; };
+            modules = [ (./home-manager + "/eaglesemanation@emnt-x280.nix") ];
+          };
       };
     };
 }

@@ -1,7 +1,7 @@
-{ lib, pkgs, outputs, ... }:
-{
+{ lib, pkgs, outputs, ... }: {
   # Include modules that are being exported on flake level + all bundles that can be configured per host
-  imports = [ ./bundles ./host_os ] ++ builtins.attrValues outputs.homeManagerModules;
+  imports = [ ./bundles ./host_os ]
+    ++ builtins.attrValues outputs.homeManagerModules;
 
   # Nicely reload system units when changing configs
   systemd.user.startServices = "sd-switch";
@@ -10,7 +10,13 @@
   xdg.enable = true;
 
   programs = {
+    # Bootstrap
     home-manager.enable = true;
+    # Automatically load programs in devShell for each project
+    direnv = {
+      enable = true;
+      nix-direnv.enable = true;
+    };
   };
 
   nix = {

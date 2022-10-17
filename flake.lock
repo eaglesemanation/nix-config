@@ -36,6 +36,21 @@
         "type": "github"
       }
     },
+    "flake-utils_2": {
+      "locked": {
+        "lastModified": 1644229661,
+        "narHash": "sha256-1YdnJAsNy69bpcjuoKdOYQX0YxZBiCYZo4Twxerqv7k=",
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "rev": "3cecb5b042f7f209c56ffd8371b2711a290ec797",
+        "type": "github"
+      },
+      "original": {
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "type": "github"
+      }
+    },
     "hardware": {
       "locked": {
         "lastModified": 1665040200,
@@ -125,6 +140,39 @@
         "type": "github"
       }
     },
+    "nixpkgs_2": {
+      "locked": {
+        "lastModified": 1645655918,
+        "narHash": "sha256-ZfbEFRW7o237+A1P7eTKhXje435FCAoe0blj2n20Was=",
+        "owner": "nixos",
+        "repo": "nixpkgs",
+        "rev": "77a7a4197740213879b9a1d2e1788c6c8ade4274",
+        "type": "github"
+      },
+      "original": {
+        "id": "nixpkgs",
+        "type": "indirect"
+      }
+    },
+    "pre-commit-hooks": {
+      "inputs": {
+        "flake-utils": "flake-utils_2",
+        "nixpkgs": "nixpkgs_2"
+      },
+      "locked": {
+        "lastModified": 1665584211,
+        "narHash": "sha256-Qc9zn43UjLpP823BP416hAsoaXugwWw+nKPVqsNhqdY=",
+        "owner": "cachix",
+        "repo": "pre-commit-hooks.nix",
+        "rev": "94b0f300dd9a23d4e851aa2a947a1511d3410e2d",
+        "type": "github"
+      },
+      "original": {
+        "owner": "cachix",
+        "repo": "pre-commit-hooks.nix",
+        "type": "github"
+      }
+    },
     "root": {
       "inputs": {
         "fenix": "fenix",
@@ -132,6 +180,7 @@
         "home-manager": "home-manager",
         "nixgl": "nixgl",
         "nixpkgs": "nixpkgs",
+        "pre-commit-hooks": "pre-commit-hooks",
         "sops-nix": "sops-nix",
         "utils": "utils_2"
       }

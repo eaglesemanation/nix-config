@@ -9,7 +9,10 @@ in {
     home.packages = with pkgs; [
       jq # Parsing JSON in terminal
       tealdeer # tldr, short version of man pages
+      xh # httpie analog written in Rust, simple CLI for HTTP requests
     ];
+
+    programs.zsh.shellAliases = { http = "xh"; };
 
     # Shell prompt
     programs.starship = {
