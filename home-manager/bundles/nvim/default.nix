@@ -2,15 +2,14 @@
 let
   inherit (lib) mkOption types mkEnableOption mkIf;
   cfg = config.bundles.nvim;
-in
-{
+in {
   options = {
     bundles.nvim = {
       enable = mkEnableOption "Neovim bundle";
       setAsEditor = mkOption {
         type = types.bool;
         default = true;
-        description = "Sets EDITOR=\"nvim\"";
+        description = ''Sets EDITOR="nvim"'';
       };
     };
   };
@@ -33,16 +32,14 @@ in
       cmake-language-server
     ];
 
-    home.sessionVariables = mkIf cfg.setAsEditor {
-      EDITOR = "nvim";
-    };
+    home.sessionVariables = mkIf cfg.setAsEditor { EDITOR = "nvim"; };
 
     xdg.configFile.nvim = {
       recursive = true;
       source = ./nvimrc;
       target = "nvim";
       onChange = ''
-         nvim --headless -c 'autocmd User PackerComplete quitall' -c 'PackerSync'
+        nvim --headless -c 'autocmd User PackerComplete quitall' -c 'PackerSync'
       '';
     };
 
