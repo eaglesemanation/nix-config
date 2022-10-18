@@ -1,12 +1,14 @@
 { lib, pkgs, config, ... }:
 let
-  inherit (lib) mkOption mkEnableOption mkIf types attrNames filterAttrs removeSuffix;
+  inherit (lib)
+    mkOption mkEnableOption mkIf types attrNames filterAttrs removeSuffix;
   cfg = config.bundles.dev_envs;
 
-  env_filenames = attrNames (filterAttrs (n: v: v == "regular" && n != "default.nix") (builtins.readDir ./.));
+  env_filenames = attrNames
+    (filterAttrs (n: v: v == "regular" && n != "default.nix")
+      (builtins.readDir ./.));
   envs = builtins.map (v: removeSuffix ".nix" v) env_filenames;
-in
-{
+in {
   options.bundles.dev_envs = {
     enable = mkEnableOption "Tools for software development";
     environments = mkOption {
