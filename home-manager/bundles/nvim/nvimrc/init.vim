@@ -26,10 +26,10 @@ set shiftwidth=0
 set softtabstop=0
 " Replace tabs with spaces
 set expandtab
-" Add russian for spelling check
+" Add Russian for spelling check
 set spelllang=en,ru
 set spell
-" Use persistant undo files for recovery
+" Use persistent undo files for recovery
 set noswapfile
 set nobackup
 set undofile

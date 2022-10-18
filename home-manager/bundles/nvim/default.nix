@@ -22,14 +22,6 @@ in {
       # telescope external dependencies
       ripgrep
       fd
-      # language servers
-      clang-tools
-      deno
-      stylua
-      shellcheck
-      terraform
-      yaml-language-server
-      cmake-language-server
     ];
 
     home.sessionVariables = mkIf cfg.setAsEditor { EDITOR = "nvim"; };

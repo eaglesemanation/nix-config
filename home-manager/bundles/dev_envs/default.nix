@@ -3,22 +3,22 @@ let
   inherit (lib) mkOption mkEnableOption mkIf types attrNames filterAttrs removeSuffix;
   cfg = config.bundles.dev_envs;
 
-  lang_filenames = attrNames (filterAttrs (n: v: v == "regular" && n != "default.nix") (builtins.readDir ./.));
-  langs = builtins.map (v: removeSuffix ".nix" v) lang_filenames;
+  env_filenames = attrNames (filterAttrs (n: v: v == "regular" && n != "default.nix") (builtins.readDir ./.));
+  envs = builtins.map (v: removeSuffix ".nix" v) env_filenames;
 in
 {
   options.bundles.dev_envs = {
     enable = mkEnableOption "Tools for software development";
-    languages = mkOption {
-      type = types.listOf (types.enum langs);
-      description = "List of programming languages that need to be enabled";
-      default = langs;
+    environments = mkOption {
+      type = types.listOf (types.enum envs);
+      description = "List of development environments that need to be enabled";
+      default = envs;
     };
   };
 
-  imports = builtins.map (n: ./. + "/${n}") lang_filenames;
+  imports = builtins.map (n: ./. + "/${n}") env_filenames;
 
   config = mkIf cfg.enable {
-    bundles.dev_env = lib.genAttrs cfg.languages (_: { enable = true; });
+    bundles.dev_env = lib.genAttrs cfg.environments (_: { enable = true; });
   };
 }
