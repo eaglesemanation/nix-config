@@ -52,8 +52,6 @@
       checks = utils.lib.eachSystemMap supportedSystems (system: {
         pre-commit-check = pre-commit-hooks.lib.${system}.run {
           src = ./.;
-          # Checking on each commit is annoying, only check on push
-          default_stages = [ "manual" "push" ];
           hooks = { nixfmt.enable = true; };
         };
       });
@@ -109,7 +107,8 @@
           home-manager.lib.homeManagerConfiguration {
             pkgs = legacyPackages.x86_64-linux;
             extraSpecialArgs = { inherit inputs outputs; };
-            modules = [ (./home-manager + "/eaglesemanation@emnt-desktop.nix") ];
+            modules =
+              [ (./home-manager + "/eaglesemanation@emnt-desktop.nix") ];
           };
       };
     };

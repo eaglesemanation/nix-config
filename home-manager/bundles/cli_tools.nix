@@ -2,8 +2,7 @@
 let
   inherit (lib) mkOption types mkEnableOption mkIf;
   cfg = config.bundles.cli_tools;
-in
-{
+in {
   options.bundles.cli_tools.enable = mkEnableOption "CLI tools bundle";
 
   config = mkIf cfg.enable {
@@ -39,7 +38,8 @@ in
 
     # Starship changes prompt when entering nix shell, no need for env diff log. This makes direnv silent
     # TODO: Find / implement a fix that makes direnv less verbose rather than silent
-    home.sessionVariables = mkIf config.programs.starship.enable { DIRENV_LOG_FORMAT = ""; };
+    home.sessionVariables =
+      mkIf config.programs.starship.enable { DIRENV_LOG_FORMAT = ""; };
 
     # Fuzzy search, integrates with zsh
     programs.skim.enable = true;

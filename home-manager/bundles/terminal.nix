@@ -30,22 +30,20 @@ in {
   };
 
   config = mkIf cfg.enable {
-    home.packages = with pkgs; [
-      (nerdfonts.override { fonts = [ cfg.font ]; })
-    ];
+    home.packages = with pkgs;
+      [ (nerdfonts.override { fonts = [ cfg.font ]; }) ];
 
     # Include helpful cli tools by default
     bundles.cli_tools.enable = true;
 
     # Terminal emulator
-    programs.alacritty = let
-      font = "${cfg.font} Nerd Font";
+    programs.alacritty = let font = "${cfg.font} Nerd Font";
     in {
       enable = true;
       settings = {
         shell = {
           program = "${terminal_init}/bin/init.sh";
-          args = ["alacritty"];
+          args = [ "alacritty" ];
         };
         font = {
           normal = {
@@ -92,9 +90,7 @@ in {
         # Enable scrollback with mouse
         set -g mouse on
       '';
-      plugins = lib.attrValues {
-        inherit (pkgs.tmuxPlugins) pain-control;
-      };
+      plugins = lib.attrValues { inherit (pkgs.tmuxPlugins) pain-control; };
     };
 
     # Shell
