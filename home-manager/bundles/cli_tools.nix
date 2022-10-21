@@ -2,7 +2,8 @@
 let
   inherit (lib) mkOption types mkEnableOption mkIf;
   cfg = config.bundles.cli_tools;
-in {
+in
+{
   options.bundles.cli_tools.enable = mkEnableOption "CLI tools bundle";
 
   config = mkIf cfg.enable {
@@ -28,8 +29,17 @@ in {
           vimcmd_replace_symbol = "[](bold purple)";
           vimcmd_visual_symbol = "[](bold yellow)";
         };
+        aws.symbol = " ";
+        c.symbol = " ";
+        git_branch.symbol = " ";
+        golang.symbol = "ﳑ ";
+        nix_shell.symbol = " ";
       };
     };
+
+    # Starship changes prompt when entering nix shell, no need for env diff log. This makes direnv silent
+    # TODO: Find / implement a fix that makes direnv less verbose rather than silent
+    home.sessionVariables = mkIf config.programs.starship.enable { DIRENV_LOG_FORMAT = ""; };
 
     # Fuzzy search, integrates with zsh
     programs.skim.enable = true;

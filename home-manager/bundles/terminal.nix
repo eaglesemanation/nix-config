@@ -39,7 +39,7 @@ in {
 
     # Terminal emulator
     programs.alacritty = let
-      font = "${cfg.font} Nerd Font Mono";
+      font = "${cfg.font} Nerd Font";
     in {
       enable = true;
       settings = {

@@ -105,6 +105,12 @@
             extraSpecialArgs = { inherit inputs outputs; };
             modules = [ (./home-manager + "/eaglesemanation@emnt-x280.nix") ];
           };
+        "eaglesemanation@emnt-desktop" =
+          home-manager.lib.homeManagerConfiguration {
+            pkgs = legacyPackages.x86_64-linux;
+            extraSpecialArgs = { inherit inputs outputs; };
+            modules = [ (./home-manager + "/eaglesemanation@emnt-desktop.nix") ];
+          };
       };
     };
 }

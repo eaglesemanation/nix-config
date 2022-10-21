@@ -15,9 +15,12 @@ require("packer").startup(function(use)
     -- Self-manage plugin manager
     use("wbthomason/packer.nvim")
 
-    -- General
+    -- Movements
     use("tpope/vim-surround")
     use("tpope/vim-repeat")
+
+    -- Lua impl of filetype.vim
+    use("nathom/filetype.nvim")
 
     -- Visual
     use({
@@ -74,6 +77,9 @@ require("packer").startup(function(use)
     -- Improved syntax support
     use({
         "nvim-treesitter/nvim-treesitter",
+        requires = {
+            { "nvim-treesitter/nvim-treesitter-context" }
+        },
         run = function()
             require("nvim-treesitter.install").update({ with_sync = true })
         end,
@@ -81,7 +87,6 @@ require("packer").startup(function(use)
             require("eaglesemanation.treesitter")
         end,
     })
-    use("nvim-treesitter/nvim-treesitter-context")
     use("towolf/vim-helm")
 
     -- Autocompletion
