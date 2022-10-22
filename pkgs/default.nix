@@ -2,4 +2,9 @@
 let
   inherit (pkgs.lib) callPackageWith;
   callPackage = callPackageWith (pkgs // pkgs.python3Packages);
-in { conventional-pre-commit = callPackage ./conventional-pre-commit.nix { }; }
+in {
+  conventional-pre-commit = callPackage ./conventional-pre-commit.nix { };
+  # Wrapper that strips ANSI color codes
+  conventional-pre-commit-colorless =
+    callPackage ./conventional-pre-commit-colorless.nix { };
+}

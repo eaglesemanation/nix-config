@@ -60,7 +60,7 @@
               stages = [ "commit-msg" ];
               entry = let
                 binPath = "${
-                    packages.${system}.conventional-pre-commit
+                    packages.${system}.conventional-pre-commit-colorless
                   }/bin/conventional-pre-commit";
                 commitTypes = nixpkgs.lib.concatStringsSep " " [
                   "build"
