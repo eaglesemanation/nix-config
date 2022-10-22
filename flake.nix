@@ -52,7 +52,32 @@
       checks = utils.lib.eachSystemMap supportedSystems (system: {
         pre-commit-check = pre-commit-hooks.lib.${system}.run {
           src = ./.;
-          hooks = { nixfmt.enable = true; };
+          hooks = {
+            nixfmt.enable = true;
+            conventional-commits = {
+              enable = true;
+              name = "Conventional commit messages";
+              stages = [ "commit-msg" ];
+              entry = let
+                binPath = "${
+                    packages.${system}.conventional-pre-commit
+                  }/bin/conventional-pre-commit";
+                commitTypes = nixpkgs.lib.concatStringsSep " " [
+                  "build"
+                  "chore"
+                  "ci"
+                  "docs"
+                  "feat"
+                  "fix"
+                  "perf"
+                  "refactor"
+                  "revert"
+                  "style"
+                  "test"
+                ];
+              in "${binPath} ${commitTypes} .git/COMMIT_MSG";
+            };
+          };
         };
       });
 
