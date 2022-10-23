@@ -54,6 +54,7 @@
           src = ./.;
           hooks = {
             nixfmt.enable = true;
+            stylua.enable = true;
             conventional-commits = {
               enable = true;
               name = "Conventional commit messages";

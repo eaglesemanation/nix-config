@@ -37,9 +37,10 @@ telescope.load_extension("fzf")
 
 -- git_files with fallback for find_files
 function M.project_files()
-    -- TODO: Figure out why 1 pcall doesn't work
-    local ok = pcall(pcall(builtin.git_files))
-    if not ok then
+    local in_git_repo = vim.fn.systemlist("git rev-parse --is-inside-work-tree")[1] == "true"
+    if in_git_repo then
+        builtin.git_files()
+    else
         builtin.find_files()
     end
 end

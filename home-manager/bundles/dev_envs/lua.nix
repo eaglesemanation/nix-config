@@ -7,6 +7,8 @@ in {
     mkEnableOption "Lua development environment";
 
   config = mkIf cfg.enable {
-    home.packages = builtins.attrValues { inherit (pkgs) stylua; };
+    home.packages = builtins.attrValues {
+      inherit (pkgs) stylua sumneko-lua-language-server;
+    };
   };
 }

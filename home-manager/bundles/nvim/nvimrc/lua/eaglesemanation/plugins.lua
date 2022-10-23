@@ -30,15 +30,12 @@ require("packer").startup(function(use)
             require("colorizer").setup()
         end,
     })
-    use({
-        "kyazdani42/nvim-web-devicons",
-        as = "devicons",
-    })
+    use("kyazdani42/nvim-web-devicons")
     use({
         "nvim-lualine/lualine.nvim",
-        after = { "devicons" },
+        requires = { "kyazdani42/nvim-web-devicons", opt = true },
         config = function()
-            require("eaglesemanation.lualine")
+            require("lualine").setup({})
         end,
     })
     use({
@@ -58,6 +55,12 @@ require("packer").startup(function(use)
     -- Git integration
     use("tpope/vim-fugitive")
     use("tpope/vim-git")
+    use({
+        "lewis6991/gitsigns.nvim",
+        config = function()
+            require("gitsigns").setup()
+        end,
+    })
 
     -- Simplified language servers config
     use("neovim/nvim-lspconfig")
@@ -78,7 +81,7 @@ require("packer").startup(function(use)
     use({
         "nvim-treesitter/nvim-treesitter",
         requires = {
-            { "nvim-treesitter/nvim-treesitter-context" }
+            { "nvim-treesitter/nvim-treesitter-context" },
         },
         run = function()
             require("nvim-treesitter.install").update({ with_sync = true })
@@ -111,7 +114,7 @@ require("packer").startup(function(use)
     -- Diagnostics list
     use({
         "folke/trouble.nvim",
-        requires = "devicons",
+        requires = { "kyazdani42/nvim-web-devicons", opt = true },
         config = function()
             require("trouble").setup({})
         end,
