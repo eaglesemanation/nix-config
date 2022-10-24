@@ -18,6 +18,8 @@ require("packer").startup(function(use)
     -- Movements
     use("tpope/vim-surround")
     use("tpope/vim-repeat")
+    use("wellle/targets.vim")
+    use("ggandor/leap.nvim")
 
     -- Lua impl of filetype.vim
     use("nathom/filetype.nvim")
@@ -79,6 +81,9 @@ require("packer").startup(function(use)
     -- Simplified language servers config
     use("neovim/nvim-lspconfig")
     use("jose-elias-alvarez/null-ls.nvim")
+    use({
+        "https://git.sr.ht/~whynothugo/lsp_lines.nvim",
+    })
 
     -- Debugger
     use({
@@ -91,7 +96,7 @@ require("packer").startup(function(use)
             },
         },
         config = function()
-            require("eaglesemanation.dap")
+            require("emnt-nvim.dap")
         end,
     })
 
@@ -105,7 +110,7 @@ require("packer").startup(function(use)
             require("nvim-treesitter.install").update({ with_sync = true })
         end,
         config = function()
-            require("eaglesemanation.treesitter")
+            require("emnt-nvim.treesitter")
         end,
     })
     use("towolf/vim-helm")
@@ -125,7 +130,7 @@ require("packer").startup(function(use)
             { "saadparwaiz1/cmp_luasnip", after = { "luasnip" } },
         },
         config = function()
-            require("eaglesemanation.lsp")
+            require("emnt-nvim.lsp")
         end,
     })
 
@@ -149,7 +154,7 @@ require("packer").startup(function(use)
             { "nvim-telescope/telescope-fzf-native.nvim", run = "make" },
         },
         config = function()
-            require("eaglesemanation.telescope")
+            require("emnt-nvim.telescope")
         end,
     })
 
@@ -161,7 +166,7 @@ require("packer").startup(function(use)
         "lervag/vimtex",
         ft = { "tex" },
         config = function()
-            require("eaglesemanation.vimtex")
+            require("emnt-nvim.vimtex")
         end,
     })
 

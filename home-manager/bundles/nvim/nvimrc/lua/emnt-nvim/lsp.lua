@@ -9,8 +9,7 @@ local luasnip = require("luasnip")
 local lspkind = require("lspkind")
 local cmp_nvim_lsp = require("cmp_nvim_lsp")
 local null_ls = require("null-ls")
-
-local utils = require("eaglesemanation.utils")
+local lsp_lines = require("lsp_lines")
 
 -- LSP Config
 local servers = {
@@ -97,6 +96,13 @@ null_ls.setup({
     },
 })
 
+lsp_lines.setup()
+-- Disable virtual_text since it's redundant due to lsp_lines.
+vim.diagnostic.config({
+    virtual_text = false,
+    virtual_lines = true,
+})
+
 -- Diagnostics Config
 
 -- Set diganostic sign icons
@@ -157,6 +163,13 @@ cmp.setup({
 })
 
 -- Remaps
-utils.nnoremap("<leader>sf", "<cmd>lua vim.lsp.buf.format()<cr>")
-utils.nnoremap("<leader>sd", "<cmd>lua vim.lsp.buf.definition()<cr>")
-utils.nnoremap("<leader>sh", "<cmd>lua vim.lsp.buf.hover()<cr>")
+vim.keymap.set("n", "<leader>sf", vim.lsp.buf.format)
+vim.keymap.set("n", "<leader>sd", vim.lsp.buf.definition)
+vim.keymap.set("n", "<leader>sh", vim.lsp.buf.hover)
+
+local virtual_lines_enabled = true
+-- (s)erver (e)rrors (t)oggle
+vim.keymap.set("n", "<leader>set", function()
+    virtual_lines_enabled = not virtual_lines_enabled
+    vim.diagnostic.config({ virtual_lines = virtual_lines_enabled, virtual_text = not virtual_lines_enabled })
+end)
