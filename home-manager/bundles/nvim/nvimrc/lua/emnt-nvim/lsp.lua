@@ -22,6 +22,7 @@ local servers = {
             end
         end,
     },
+    terraformls = true,
 
     clangd = {
         cmd = {
@@ -68,6 +69,7 @@ local servers = {
 local servers_nix_environments = {
     yamlls = "devops",
     terraform_fmt = "devops",
+    terraformls = "devops",
     shellcheck = "devops",
 
     clangd = "cpp",

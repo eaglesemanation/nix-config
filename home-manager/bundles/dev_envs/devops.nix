@@ -7,7 +7,7 @@ in {
 
   config = mkIf cfg.enable {
     home.packages = builtins.attrValues {
-      inherit (pkgs) shellcheck terraform yaml-language-server;
+      inherit (pkgs) shellcheck terraform terraform-ls yaml-language-server;
     };
   };
 }
