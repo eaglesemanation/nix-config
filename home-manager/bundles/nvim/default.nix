@@ -35,6 +35,11 @@ in {
       '';
     };
 
+    xdg.configFile.nvimDevEnvs = {
+      text = builtins.toJSON config.bundles.dev_envs.environments;
+      target = "nvim/devenvs.json";
+    };
+
     programs.neovim = {
       enable = true;
       vimAlias = true;

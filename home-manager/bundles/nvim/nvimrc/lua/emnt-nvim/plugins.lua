@@ -22,7 +22,8 @@ require("packer").startup(function(use)
     use("ggandor/leap.nvim")
 
     -- Lua impl of filetype.vim
-    use("nathom/filetype.nvim")
+    -- TODO: Re-enable when figure out incompatibility with vim-helm
+    --use("nathom/filetype.nvim")
 
     -- Visual
     use({
@@ -88,13 +89,6 @@ require("packer").startup(function(use)
     -- Debugger
     use({
         "mfussenegger/nvim-dap",
-        requires = {
-            {
-                "leoluz/nvim-dap-go",
-                opt = true,
-                ft = { "go", "gomod" },
-            },
-        },
         config = function()
             require("emnt-nvim.dap")
         end,

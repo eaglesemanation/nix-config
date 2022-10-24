@@ -4,6 +4,8 @@ if not ok then
     return
 end
 
+local nix_devenvs = require("emnt-nvim.nix_devenvs")
+
 local lspconfig = require("lspconfig")
 local luasnip = require("luasnip")
 local lspkind = require("lspkind")
@@ -61,10 +63,36 @@ local servers = {
     },
 }
 
+-- Lookup table for specific language server and home-manager devenv
+-- TODO: Instead of manually associating binary with env name - just dump all executables provided by enabled envs into json
+local servers_nix_environments = {
+    yamlls = "devops",
+    terraform_fmt = "devops",
+    shellcheck = "devops",
+
+    clangd = "cpp",
+    cmake = "cpp",
+
+    rust_analyzer = "rust",
+
+    gopls = "golang",
+
+    pylsp = "python",
+
+    denols = "typescript",
+
+    rnix = "nix",
+
+    sumneko_lua = "lua",
+    stylua = "lua",
+}
+
 local default_capabilities = cmp_nvim_lsp.default_capabilities()
 
 local setup_server = function(server, config)
-    if not config then
+    local env_name = servers_nix_environments[server]
+
+    if not config or not nix_devenvs.is_environment_enabled(env_name) then
         return
     end
 
@@ -86,21 +114,34 @@ for server, config in pairs(servers) do
     setup_server(server, config)
 end
 
+local function null_ls_sources_nix_environment_filter(sources)
+    local res = {}
+    for i, source in pairs(sources) do
+        local env_name = servers_nix_environments[source.name]
+        if env_name == nil or nix_devenvs.is_environment_enabled(env_name) then
+            res[i] = source
+        end
+    end
+    return res
+end
+
 null_ls.setup({
-    sources = {
+    sources = null_ls_sources_nix_environment_filter({
         null_ls.builtins.formatting.trim_whitespace,
         null_ls.builtins.formatting.trim_newlines,
         null_ls.builtins.formatting.stylua,
         null_ls.builtins.formatting.terraform_fmt,
         null_ls.builtins.diagnostics.shellcheck,
-    },
+    }),
 })
 
 lsp_lines.setup()
 -- Disable virtual_text since it's redundant due to lsp_lines.
 vim.diagnostic.config({
     virtual_text = false,
-    virtual_lines = true,
+    virtual_lines = {
+        only_current_line = true,
+    },
 })
 
 -- Diagnostics Config
@@ -166,10 +207,3 @@ cmp.setup({
 vim.keymap.set("n", "<leader>sf", vim.lsp.buf.format)
 vim.keymap.set("n", "<leader>sd", vim.lsp.buf.definition)
 vim.keymap.set("n", "<leader>sh", vim.lsp.buf.hover)
-
-local virtual_lines_enabled = true
--- (s)erver (e)rrors (t)oggle
-vim.keymap.set("n", "<leader>set", function()
-    virtual_lines_enabled = not virtual_lines_enabled
-    vim.diagnostic.config({ virtual_lines = virtual_lines_enabled, virtual_text = not virtual_lines_enabled })
-end)
