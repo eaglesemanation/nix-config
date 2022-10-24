@@ -27,15 +27,22 @@ require("packer").startup(function(use)
         "norcalli/nvim-colorizer.lua",
         ft = { "css", "html" },
         config = function()
-            require("colorizer").setup()
+            -- Avoids failing during bootstrap
+            local ok, colorizer = pcall(require, "colorizer")
+            if ok then
+                colorizer.setup()
+            end
         end,
     })
     use("kyazdani42/nvim-web-devicons")
     use({
         "nvim-lualine/lualine.nvim",
-        requires = { "kyazdani42/nvim-web-devicons", opt = true },
+        requires = { { "kyazdani42/nvim-web-devicons", opt = true } },
         config = function()
-            require("lualine").setup({})
+            local ok, lualine = pcall(require, "lualine")
+            if ok then
+                lualine.setup({})
+            end
         end,
     })
     use({
@@ -48,7 +55,10 @@ require("packer").startup(function(use)
         -- Keep cursor position when window below is opened
         "luukvbaal/stabilize.nvim",
         config = function()
-            require("stabilize").setup()
+            local ok, stabilize = pcall(require, "stabilize")
+            if ok then
+                stabilize.setup()
+            end
         end,
     })
 
@@ -58,9 +68,13 @@ require("packer").startup(function(use)
     use({
         "lewis6991/gitsigns.nvim",
         config = function()
-            require("gitsigns").setup()
+            local ok, gitsigns = pcall(require, "gitsigns")
+            if ok then
+                gitsigns.setup()
+            end
         end,
     })
+    use({ "sindrets/diffview.nvim", requires = "nvim-lua/plenary.nvim" })
 
     -- Simplified language servers config
     use("neovim/nvim-lspconfig")
@@ -70,7 +84,11 @@ require("packer").startup(function(use)
     use({
         "mfussenegger/nvim-dap",
         requires = {
-            { "leoluz/nvim-dap-go" },
+            {
+                "leoluz/nvim-dap-go",
+                opt = true,
+                ft = { "go", "gomod" },
+            },
         },
         config = function()
             require("eaglesemanation.dap")
@@ -114,9 +132,12 @@ require("packer").startup(function(use)
     -- Diagnostics list
     use({
         "folke/trouble.nvim",
-        requires = { "kyazdani42/nvim-web-devicons", opt = true },
+        requires = { { "kyazdani42/nvim-web-devicons", opt = true } },
         config = function()
-            require("trouble").setup({})
+            local ok, trouble = pcall(require, "trouble")
+            if ok then
+                trouble.setup({})
+            end
         end,
     })
 

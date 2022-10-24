@@ -1,3 +1,4 @@
+-- Avoids failing during bootstrap
 local ok, cmp = pcall(require, "cmp")
 if not ok then
     return

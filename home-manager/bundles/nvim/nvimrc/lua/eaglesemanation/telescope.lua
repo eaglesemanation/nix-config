@@ -1,5 +1,6 @@
 local M = {}
 
+-- Avoids failing during bootstrap
 local ok, telescope = pcall(require, "telescope")
 if not ok then
     return
