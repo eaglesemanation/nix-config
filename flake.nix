@@ -93,6 +93,9 @@
       packages = utils.lib.eachSystemMap supportedSystems
         (system: import ./pkgs { pkgs = legacyPackages.${system}; });
 
+      # Helper functions
+      lib = import ./lib { inherit (nixpkgs) lib; };
+
       # This instantiates nixpkgs for each system listed above
       legacyPackages = utils.lib.eachSystemMap supportedSystems (system:
         import inputs.nixpkgs {

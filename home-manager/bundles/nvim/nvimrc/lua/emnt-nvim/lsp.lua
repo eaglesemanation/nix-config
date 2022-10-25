@@ -64,37 +64,10 @@ local servers = {
     },
 }
 
--- Lookup table for specific language server and home-manager devenv
--- TODO: Instead of manually associating binary with env name - just dump all executables provided by enabled envs into json
-local servers_nix_environments = {
-    yamlls = "devops",
-    terraform_fmt = "devops",
-    terraformls = "devops",
-    shellcheck = "devops",
-
-    clangd = "cpp",
-    cmake = "cpp",
-
-    rust_analyzer = "rust",
-
-    gopls = "golang",
-
-    pylsp = "python",
-
-    denols = "typescript",
-
-    rnix = "nix",
-
-    sumneko_lua = "lua",
-    stylua = "lua",
-}
-
 local default_capabilities = cmp_nvim_lsp.default_capabilities()
 
 local setup_server = function(server, config)
-    local env_name = servers_nix_environments[server]
-
-    if not config or not nix_devenvs.is_environment_enabled(env_name) then
+    if not config or not nix_devenvs.is_binary_provided(server) then
         return
     end
 
@@ -119,8 +92,7 @@ end
 local function null_ls_sources_nix_environment_filter(sources)
     local res = {}
     for i, source in pairs(sources) do
-        local env_name = servers_nix_environments[source.name]
-        if env_name == nil or nix_devenvs.is_environment_enabled(env_name) then
+        if nix_devenvs.is_binary_provided(source.name) then
             res[i] = source
         end
     end
