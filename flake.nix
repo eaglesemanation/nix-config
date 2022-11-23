@@ -111,7 +111,7 @@
               let
                 pkgs =
                   inputs.fenix.inputs.nixpkgs.legacyPackages.${super.system};
-              in inputs.fenix.overlay pkgs pkgs);
+              in inputs.fenix.overlays.default pkgs pkgs);
           };
           config.allowUnfree = true;
         });
