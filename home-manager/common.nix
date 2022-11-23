@@ -1,4 +1,4 @@
-{ lib, pkgs, outputs, ... }: {
+{ lib, pkgs, inputs, outputs, ... }: {
   # Include modules that are being exported on flake level + all bundles that can be configured per host
   imports = [ ./bundles ./host_os ]
     ++ builtins.attrValues outputs.homeManagerModules;
@@ -26,6 +26,7 @@
       # Disable annoying warning about flake git repo being dirty
       warn-dirty = false;
     };
+    registry = { nixpkgs.flake = inputs.nixpkgs; };
   };
 
   # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion

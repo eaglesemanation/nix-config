@@ -4,8 +4,6 @@ if not ok then
     return
 end
 
-local nix_devenvs = require("emnt-nvim.nix_devenvs")
-
 local lspconfig = require("lspconfig")
 local luasnip = require("luasnip")
 local lspkind = require("lspkind")
@@ -67,9 +65,9 @@ local servers = {
 local default_capabilities = cmp_nvim_lsp.default_capabilities()
 
 local setup_server = function(server, config)
-    if not config or not nix_devenvs.is_binary_provided(server) then
-        return
-    end
+    --if not config or vim.fn.executable(server) ~= 1 then
+    --    return
+    --end
 
     if type(config) ~= "table" then
         config = {}
@@ -89,10 +87,10 @@ for server, config in pairs(servers) do
     setup_server(server, config)
 end
 
-local function null_ls_sources_nix_environment_filter(sources)
+local function null_ls_filter_executable(sources)
     local res = {}
     for i, source in pairs(sources) do
-        if nix_devenvs.is_binary_provided(source.name) then
+        if vim.fn.executable(source.name) == 1 then
             res[i] = source
         end
     end
@@ -100,7 +98,7 @@ local function null_ls_sources_nix_environment_filter(sources)
 end
 
 null_ls.setup({
-    sources = null_ls_sources_nix_environment_filter({
+    sources = null_ls_filter_executable({
         null_ls.builtins.formatting.trim_whitespace,
         null_ls.builtins.formatting.trim_newlines,
         null_ls.builtins.formatting.stylua,

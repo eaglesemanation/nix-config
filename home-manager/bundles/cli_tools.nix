@@ -44,6 +44,9 @@ in {
     # Fuzzy search, integrates with zsh
     programs.skim.enable = true;
 
-    programs.git.enable = true;
+    programs.git = {
+      enable = true;
+      lfs.enable = true;
+    };
   };
 }

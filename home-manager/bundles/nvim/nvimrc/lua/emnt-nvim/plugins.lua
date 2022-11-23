@@ -21,9 +21,8 @@ require("packer").startup(function(use)
     use("wellle/targets.vim")
     use("ggandor/leap.nvim")
 
-    -- Lua impl of filetype.vim
-    -- TODO: Re-enable when figure out incompatibility with vim-helm
-    --use("nathom/filetype.nvim")
+    -- Language specific configs such as errorformat
+    use("sheerun/vim-polyglot")
 
     -- Visual
     use({
@@ -89,8 +88,24 @@ require("packer").startup(function(use)
     -- Debugger
     use({
         "mfussenegger/nvim-dap",
+        requires = {
+            { "rcarriga/nvim-dap-ui" },
+        },
         config = function()
             require("emnt-nvim.dap")
+        end,
+    })
+
+    -- Testing frameworks integration
+    use({
+        "nvim-neotest/neotest",
+        requires = {
+            { "nvim-lua/plenary.nvim" },
+            { "nvim-treesitter/nvim-treesitter" },
+            { "rouge8/neotest-rust" },
+        },
+        config = function()
+            require("emnt-nvim.neotest")
         end,
     })
 
@@ -98,7 +113,10 @@ require("packer").startup(function(use)
     use({
         "nvim-treesitter/nvim-treesitter",
         requires = {
+            -- Keep current context at the top of buffer (for example function name)
             { "nvim-treesitter/nvim-treesitter-context" },
+            -- Interactive playground for treesitter queries
+            { "nvim-treesitter/playground" },
         },
         run = function()
             require("nvim-treesitter.install").update({ with_sync = true })
@@ -146,6 +164,7 @@ require("packer").startup(function(use)
         requires = {
             { "nvim-lua/plenary.nvim" },
             { "nvim-telescope/telescope-fzf-native.nvim", run = "make" },
+            { "nvim-telescope/telescope-ui-select.nvim" },
         },
         config = function()
             require("emnt-nvim.telescope")

@@ -10,6 +10,9 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    # Binary cache
+    cachex.url = "github:cachix/cachix";
+
     # Automatic linting and formatting on commit
     pre-commit-hooks.url = "github:cachix/pre-commit-hooks.nix";
 

@@ -6,6 +6,7 @@ end
 
 local actions = require("telescope.actions")
 local builtin = require("telescope.builtin")
+local themes = require("telescope.themes")
 
 telescope.setup({
     defaults = {
@@ -27,10 +28,14 @@ telescope.setup({
             override_file_sorter = true,
             case_mode = "smart_case",
         },
+        ["ui-select"] = {
+            themes.get_dropdown({}),
+        },
     },
 })
 
 telescope.load_extension("fzf")
+telescope.load_extension("ui-select")
 
 -- git_files with fallback for find_files
 local function project_files()
