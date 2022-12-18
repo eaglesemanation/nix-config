@@ -10,8 +10,8 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    # Binary cache
-    cachex.url = "github:cachix/cachix";
+    # Add home-manager support for cachix binary cache
+    declarative-cachix.url = "github:jonascarpay/declarative-cachix";
 
     # Automatic linting and formatting on commit
     pre-commit-hooks.url = "github:cachix/pre-commit-hooks.nix";
