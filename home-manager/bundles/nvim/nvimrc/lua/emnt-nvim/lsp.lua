@@ -12,8 +12,6 @@ local null_ls = require("null-ls")
 local hydra = require("hydra")
 local cmd = require("hydra.keymap-util").cmd
 
-local utils = require("emnt-nvim.utils")
-
 -- LSP Config
 local servers = {
     yamlls = {
