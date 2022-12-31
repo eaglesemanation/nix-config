@@ -1,6 +1,7 @@
 { lib, pkgs, config, ... }:
 let
   inherit (lib) mkOption types mkEnableOption mkIf;
+  inherit (pkgs) fetchFromGitHub;
   cfg = config.bundles.terminal;
 
   # Script for terminal emulator initialization.
@@ -17,6 +18,13 @@ let
     trap _trap_exit EXIT
     ${pkgs.tmux}/bin/tmux new-session -s "$prefix$$"
   '';
+
+  catppuccin-alacritty = fetchFromGitHub {
+    owner = "catppuccin";
+    repo = "alacritty";
+    rev = "main";
+    sha256 = "w9XVtEe7TqzxxGUCDUR9BFkzLZjG8XrplXJ3lX6f+x0=";
+  };
 in {
   options = {
     bundles.terminal = {
@@ -45,6 +53,7 @@ in {
           program = "${terminal_init}/bin/init.sh";
           args = [ "alacritty" ];
         };
+        import = [ "${catppuccin-alacritty}/catppuccin-macchiato.yml" ];
         font = {
           normal = {
             family = font;
@@ -64,7 +73,7 @@ in {
           };
           size = 11;
         };
-      } // import ./alacritty_themes/solarized_dark.nix;
+      };
     };
 
     # Terminal multiplexer
@@ -86,7 +95,7 @@ in {
         # Allows for longer session names
         set -g status-left-length 25
         # Force full color support in tmux for alacritty
-        set-option -sa terminal-overrides ',alacritty:RGB'
+        set-option -sa terminal-overrides ',xterm-256color:Tc'
         # Enable scrollback with mouse
         set -g mouse on
       '';

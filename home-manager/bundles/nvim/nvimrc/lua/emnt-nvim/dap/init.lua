@@ -4,6 +4,7 @@ if not ok then
     return
 end
 local dapui = require("dapui")
+local hydra = require("hydra")
 
 -- Use default config for now
 dapui.setup()
@@ -41,16 +42,26 @@ local function run_dap(args)
     end
 end
 
-vim.keymap.set("n", "<leader>dd", run_dap)
-vim.keymap.set("n", "<leader>dD", function()
-    vim.ui.input({
-        prompt = "Enter arguments: ",
-    }, function(args)
-        run_dap(args)
-    end)
-end)
-
-vim.keymap.set("n", "<leader>du", dapui.toggle)
-vim.keymap.set("n", "<leader>db", dap.toggle_breakpoint)
-vim.keymap.set("n", "<leader>ds", dap.step_into)
-vim.keymap.set("n", "<leader>dn", dap.step_over)
+hydra({
+    name = "Debugging",
+    mode = "n",
+    body = "<leader>d",
+    heads = {
+        { "d", run_dap, { desc = "run" } },
+        {
+            "D",
+            function()
+                vim.ui.input({
+                    prompt = "Enter arguments: ",
+                }, function(args)
+                    run_dap(args)
+                end)
+            end,
+            { desc = "run with args" },
+        },
+        { "u", dapui.toggle, { desc = "toddle [u]i" } },
+        { "b", dap.toggle_breakpoint, { desc = "[b]reakpoint" } },
+        { "s", dap.step_into, { desc = "[s]tep into" } },
+        { "n", dap.step_over, { desc = "[n]ext" } },
+    },
+})

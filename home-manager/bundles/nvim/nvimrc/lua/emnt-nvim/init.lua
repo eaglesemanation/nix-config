@@ -1,6 +1,8 @@
 -- Expand "<leader>" to this value
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
+-- Avoid delay for any command that is prefixed with space
+vim.keymap.set({ "n", "v" }, "<Space>", "<Nop>", { silent = true })
 
 -- Don't limit colors to 256 in terminal
 vim.opt.termguicolors = true
@@ -34,11 +36,21 @@ vim.opt.backup = false
 vim.opt.undofile = true
 -- Keep cursor in the middle of the screen
 vim.opt.scrolloff = 999
+-- Remove search highlights, but keep highlight while writing regex
+vim.opt.hlsearch = false
+vim.opt.incsearch = true
 
+-- Move between windows
 vim.keymap.set("n", "<leader>h", ":wincmd h<cr>")
 vim.keymap.set("n", "<leader>j", ":wincmd j<cr>")
 vim.keymap.set("n", "<leader>k", ":wincmd k<cr>")
 vim.keymap.set("n", "<leader>l", ":wincmd l<cr>")
+-- Move windows
+vim.keymap.set("n", "<leader>H", ":wincmd H<cr>")
+vim.keymap.set("n", "<leader>J", ":wincmd J<cr>")
+vim.keymap.set("n", "<leader>K", ":wincmd K<cr>")
+vim.keymap.set("n", "<leader>L", ":wincmd L<cr>")
+-- Split windows
 vim.keymap.set("n", "<leader>-", ":split<cr>")
 vim.keymap.set("n", "<leader>|", ":vsplit<cr>")
 

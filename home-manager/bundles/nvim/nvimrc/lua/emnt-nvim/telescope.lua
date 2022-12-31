@@ -8,6 +8,9 @@ local actions = require("telescope.actions")
 local builtin = require("telescope.builtin")
 local themes = require("telescope.themes")
 
+local hydra = require("hydra")
+local cmd = require("hydra.keymap-util").cmd
+
 telescope.setup({
     defaults = {
         mappings = {
@@ -47,11 +50,18 @@ local function project_files()
     end
 end
 
--- File pickers
-vim.keymap.set("n", "<leader>ff", project_files)
-vim.keymap.set("n", "<leader>fg", "<cmd>Telescope live_grep<cr>")
-vim.keymap.set("n", "<leader>fb", "<cmd>Telescope buffers<cr>")
-
--- LSP Binds
-vim.keymap.set("n", "<leader>sd", "<cmd>Telescope lsp_definitions<cr>")
-vim.keymap.set("n", "<leader>sr", "<cmd>Telescope lsp_references<cr>")
+hydra({
+    name = "Fuzzy finder",
+    mode = "n",
+    body = "<leader>f",
+    config = {
+        -- Blue hydra dies as soon as any of it heads is called
+        color = "blue",
+    },
+    heads = {
+        -- File pickers
+        { "f", project_files, { desc = "project [f]iles" } },
+        { "g", cmd("Telescope live_grep"), { desc = "[g]rep" } },
+        { "b", cmd("Telescope buffers"), { desc = "[b]uffers" } },
+    },
+})

@@ -6,15 +6,18 @@ end
 
 local lspconfig = require("lspconfig")
 local luasnip = require("luasnip")
-local lspkind = require("lspkind")
 local cmp_nvim_lsp = require("cmp_nvim_lsp")
 local null_ls = require("null-ls")
-local lsp_lines = require("lsp_lines")
+
+local hydra = require("hydra")
+local cmd = require("hydra.keymap-util").cmd
+
+local utils = require("emnt-nvim.utils")
 
 -- LSP Config
 local servers = {
     yamlls = {
-        on_attach = function(client, bufnr)
+        on_attach = function(_, bufnr)
             if vim.bo[bufnr].buftype ~= "" or vim.bo[bufnr].filetype == "helm" then
                 vim.diagnostic.disable()
             end
@@ -41,40 +44,29 @@ local servers = {
     sumneko_lua = {
         settings = {
             Lua = {
-                runtime = {
-                    -- Tell the language server which version of Lua you're using (most likely LuaJIT in the case of Neovim)
-                    version = "LuaJIT",
-                },
-                diagnostics = {
-                    -- Get the language server to recognize the `vim` global
-                    globals = { "vim" },
-                },
-                workspace = {
-                    -- Make the server aware of Neovim runtime files
-                    library = vim.api.nvim_get_runtime_file("", true),
-                },
-                -- Do not send telemetry data containing a randomized but unique identifier
-                telemetry = {
-                    enable = false,
-                },
+                completion = { callSnippet = "Replace" },
+                telemetry = { enable = false },
             },
         },
     },
 }
 
-local default_capabilities = cmp_nvim_lsp.default_capabilities()
+local capabilities = vim.lsp.protocol.make_client_capabilities()
+capabilities = cmp_nvim_lsp.default_capabilities(capabilities)
 
 local setup_server = function(server, config)
-    --if not config or vim.fn.executable(server) ~= 1 then
-    --    return
-    --end
+    local server_name = lspconfig[server].document_config.default_config.cmd[1]
+    if not config or vim.fn.executable(server_name) ~= 1 then
+        print(server_name .. " is missing")
+        return
+    end
 
     if type(config) ~= "table" then
         config = {}
     end
 
     config = vim.tbl_deep_extend("force", {
-        capabilities = default_capabilities,
+        capabilities = capabilities,
         flags = {
             debounce_text_changes = 50,
         },
@@ -107,15 +99,6 @@ null_ls.setup({
     }),
 })
 
-lsp_lines.setup()
--- Disable virtual_text since it's redundant due to lsp_lines.
-vim.diagnostic.config({
-    virtual_text = false,
-    virtual_lines = {
-        only_current_line = true,
-    },
-})
-
 -- Diagnostics Config
 
 -- Set diganostic sign icons
@@ -135,26 +118,24 @@ cmp.setup({
             luasnip.lsp_expand(args.body)
         end,
     },
-    formatting = {
-        format = lspkind.cmp_format({
-            with_text = false,
-            maxwidth = 50,
-        }),
+    window = {
+        completion = cmp.config.window.bordered(),
+        documentation = cmp.config.window.bordered(),
     },
     sources = {
         { name = "nvim_lsp" },
         { name = "luasnip" },
     },
-    mapping = {
+    mapping = cmp.mapping.preset.insert({
         ["<C-d>"] = cmp.mapping.scroll_docs(-4),
         ["<C-f>"] = cmp.mapping.scroll_docs(4),
         ["<C-e>"] = cmp.mapping.close(),
         ["<CR>"] = cmp.mapping.confirm({
             behavior = cmp.ConfirmBehavior.Replace,
-            select = false,
+            select = true,
         }),
         -- use Tab and shift-Tab to navigate autocomplete menu
-        ["<Tab>"] = function(fallback)
+        ["<Tab>"] = cmp.mapping(function(fallback)
             if cmp.visible() then
                 cmp.select_next_item()
             elseif luasnip.expand_or_jumpable() then
@@ -162,8 +143,8 @@ cmp.setup({
             else
                 fallback()
             end
-        end,
-        ["<S-Tab>"] = function(fallback)
+        end, { "i", "s" }),
+        ["<S-Tab>"] = cmp.mapping(function(fallback)
             if cmp.visible() then
                 cmp.select_prev_item()
             elseif luasnip.jumpable(-1) then
@@ -171,11 +152,24 @@ cmp.setup({
             else
                 fallback()
             end
-        end,
-    },
+        end, { "i", "s" }),
+    }),
 })
 
--- Remaps
-vim.keymap.set("n", "<leader>sf", vim.lsp.buf.format)
-vim.keymap.set("n", "<leader>sd", vim.lsp.buf.definition)
-vim.keymap.set("n", "<leader>sh", vim.lsp.buf.hover)
+hydra({
+    name = "LSP",
+    mode = "n",
+    body = "<leader>s",
+    config = {
+        -- Blue hydra dies as soon as any of it heads is called
+        color = "blue",
+    },
+    heads = {
+        { "f", vim.lsp.buf.format, { desc = "[f]ormat" } },
+        { "d", cmd("Telescope lsp_definitions"), { desc = "[d]efinitions" } },
+        { "D", cmd("Telescope lsp_references"), { desc = "references" } },
+        { "h", vim.lsp.buf.hover, { desc = "[h]over popup" } },
+        { "r", vim.lsp.buf.rename, { desc = "[r]ename" } },
+        { "a", vim.lsp.buf.code_action, { desc = "code [a]ction" } },
+    },
+})

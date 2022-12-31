@@ -1,4 +1,4 @@
-local ensure_packer = function()
+local function ensure_packer()
     local fn = vim.fn
     local install_path = fn.stdpath("data") .. "/site/pack/packer/start/packer.nvim"
     if fn.empty(fn.glob(install_path)) > 0 then
@@ -15,75 +15,133 @@ require("packer").startup(function(use)
     -- Self-manage plugin manager
     use("wbthomason/packer.nvim")
 
+    ----
     -- Movements
+    ----
     use("tpope/vim-surround")
     use("tpope/vim-repeat")
+    -- Additional targets that feel like vanilla vim
     use("wellle/targets.vim")
-    use("ggandor/leap.nvim")
+    use({
+        -- Move to any visible position in 4 keystrokes max
+        "ggandor/leap.nvim",
+        config = function()
+            require("leap").add_default_mappings()
+        end,
+    })
+    use({ "anuvyklack/hydra.nvim", as = "hydra" })
+
+    -- Fuzzy search
+    use({
+        "nvim-telescope/telescope.nvim",
+        as = "telescope",
+        requires = {
+            { "nvim-lua/plenary.nvim" },
+            { "nvim-telescope/telescope-fzf-native.nvim", run = "make" },
+            { "nvim-telescope/telescope-ui-select.nvim" },
+        },
+        config = function()
+            require("emnt-nvim.telescope")
+        end,
+    })
 
     -- Language specific configs such as errorformat
     use("sheerun/vim-polyglot")
 
-    -- Visual
+    -- Changes background color of RGB values
     use({
         "norcalli/nvim-colorizer.lua",
         ft = { "css", "html" },
         config = function()
-            -- Avoids failing during bootstrap
-            local ok, colorizer = pcall(require, "colorizer")
-            if ok then
-                colorizer.setup()
-            end
+            require("colorizer").setup()
         end,
     })
     use("kyazdani42/nvim-web-devicons")
+    -- Highly integrated color scheme
+    use({
+        "catppuccin/nvim",
+        as = "catppuccin",
+        run = function()
+            require("catppuccin").compile()
+        end,
+        config = function()
+            require("catppuccin").setup({
+                flavour = "macchiato",
+                integrations = {
+                    cmp = true,
+                    fidget = true,
+                    gitsigns = true,
+                    leap = true,
+                    neotest = true,
+                    telescope = true,
+                    treesitter = true,
+                    treesitter_context = true,
+                    dap = { enabled = true, enable_ui = true },
+                    native_lsp = { enabled = true },
+                },
+            })
+            vim.cmd.colorscheme("catppuccin-macchiato")
+        end,
+    })
     use({
         "nvim-lualine/lualine.nvim",
-        requires = { { "kyazdani42/nvim-web-devicons", opt = true } },
+        requires = {
+            { "kyazdani42/nvim-web-devicons", opt = true },
+            { "catppuccin" },
+        },
         config = function()
-            local ok, lualine = pcall(require, "lualine")
-            if ok then
-                lualine.setup({})
-            end
+            require("lualine").setup({
+                options = { theme = "catppuccin" },
+            })
         end,
     })
+    -- Keep cursor position when window below is opened
     use({
-        "ishan9299/nvim-solarized-lua",
-        config = function()
-            local _, _ = pcall(vim.cmd, "colorscheme solarized")
-        end,
-    })
-    use({
-        -- Keep cursor position when window below is opened
         "luukvbaal/stabilize.nvim",
         config = function()
-            local ok, stabilize = pcall(require, "stabilize")
-            if ok then
-                stabilize.setup()
-            end
+            require("stabilize").setup()
         end,
     })
 
+    ----
     -- Git integration
+    ----
     use("tpope/vim-fugitive")
     use("tpope/vim-git")
     use({
         "lewis6991/gitsigns.nvim",
         config = function()
-            local ok, gitsigns = pcall(require, "gitsigns")
-            if ok then
-                gitsigns.setup()
-            end
+            require("gitsigns").setup()
         end,
     })
     use({ "sindrets/diffview.nvim", requires = "nvim-lua/plenary.nvim" })
 
     -- Simplified language servers config
-    use("neovim/nvim-lspconfig")
-    use("jose-elias-alvarez/null-ls.nvim")
     use({
-        "https://git.sr.ht/~whynothugo/lsp_lines.nvim",
+        "neovim/nvim-lspconfig",
+        as = "lspconfig",
+        requires = {
+            -- Progress bar for language server indexing
+            {
+                "j-hui/fidget.nvim",
+                config = function()
+                    require("fidget").setup({
+                        window = { blend = 0 },
+                    })
+                end,
+            },
+            -- Configures lua language server for neovim config
+            {
+                "folke/neodev.nvim",
+                config = function()
+                    require("neodev").setup({})
+                end,
+            },
+            -- Autocompletion integration
+            { "hrsh7th/cmp-nvim-lsp" },
+        },
     })
+    use("jose-elias-alvarez/null-ls.nvim")
 
     -- Debugger
     use({
@@ -91,6 +149,7 @@ require("packer").startup(function(use)
         requires = {
             { "rcarriga/nvim-dap-ui" },
         },
+        after = { "hydra" },
         config = function()
             require("emnt-nvim.dap")
         end,
@@ -102,8 +161,9 @@ require("packer").startup(function(use)
         requires = {
             { "nvim-lua/plenary.nvim" },
             { "nvim-treesitter/nvim-treesitter" },
-            { "rouge8/neotest-rust" },
+            { "nvim-neotest/neotest-go" },
         },
+        after = { "hydra" },
         config = function()
             require("emnt-nvim.neotest")
         end,
@@ -122,24 +182,38 @@ require("packer").startup(function(use)
             require("nvim-treesitter.install").update({ with_sync = true })
         end,
         config = function()
-            require("emnt-nvim.treesitter")
+            require("nvim-treesitter.configs").setup({
+                ensure_installed = "all",
+                auto_install = true,
+                highlight = { enable = true },
+                indent = { enable = true },
+            })
+            require("treesitter-context").setup()
         end,
     })
-    use("towolf/vim-helm")
+    use({ "towolf/vim-helm", ft = { "helm" } })
 
-    -- Autocompletion
+    -- Snippets
     use({
         "L3MON4D3/LuaSnip",
         as = "luasnip",
+        requires = {
+            -- Autocompletion
+            { "saadparwaiz1/cmp_luasnip" },
+        },
     })
+    -- Autocompletion
     use({
         "hrsh7th/nvim-cmp",
         requires = {
-            { "hrsh7th/cmp-nvim-lsp" },
             { "hrsh7th/cmp-path" },
             { "hrsh7th/cmp-omni" },
-            { "onsails/lspkind-nvim" },
-            { "saadparwaiz1/cmp_luasnip", after = { "luasnip" } },
+        },
+        after = {
+            "lspconfig",
+            "luasnip",
+            "telescope",
+            "hydra",
         },
         config = function()
             require("emnt-nvim.lsp")
@@ -151,23 +225,7 @@ require("packer").startup(function(use)
         "folke/trouble.nvim",
         requires = { { "kyazdani42/nvim-web-devicons", opt = true } },
         config = function()
-            local ok, trouble = pcall(require, "trouble")
-            if ok then
-                trouble.setup({})
-            end
-        end,
-    })
-
-    -- Fuzzy search
-    use({
-        "nvim-telescope/telescope.nvim",
-        requires = {
-            { "nvim-lua/plenary.nvim" },
-            { "nvim-telescope/telescope-fzf-native.nvim", run = "make" },
-            { "nvim-telescope/telescope-ui-select.nvim" },
-        },
-        config = function()
-            require("emnt-nvim.telescope")
+            require("trouble").setup({})
         end,
     })
 
@@ -179,13 +237,26 @@ require("packer").startup(function(use)
         "lervag/vimtex",
         ft = { "tex" },
         config = function()
-            require("emnt-nvim.vimtex")
+            vim.g.vimtex_view_method = "general"
+            vim.g.vimtex_view_general_viewer = "evince"
+
+            vim.g.vimtex_compiler_method = "latexmk"
+            -- https://github.com/neovim/neovim/issues/12544
+            vim.api.nvim_set_var("vimtex_compiler_latexmk", { build_dir = "./build" })
+
+            vim.api.nvim_create_augroup("VimTeX", { clear = true })
+            vim.api.nvim_create_autocmd("FileType", {
+                group = "VimTeX",
+                pattern = { "tex" },
+                callback = function()
+                    require("cmp").setup.buffer({ sources = { { name = "omni" } } })
+                end,
+            })
         end,
     })
 
     -- Setup on first boot
     if packer_bootstrap then
         require("packer").sync()
-        vim.cmd("packadd packer.nvim")
     end
 end)
