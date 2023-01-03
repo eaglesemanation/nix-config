@@ -19,11 +19,11 @@ let
     ${pkgs.tmux}/bin/tmux new-session -s "$prefix$$"
   '';
 
-  catppuccin-alacritty = fetchFromGitHub {
-    owner = "catppuccin";
-    repo = "alacritty";
-    rev = "main";
-    sha256 = "w9XVtEe7TqzxxGUCDUR9BFkzLZjG8XrplXJ3lX6f+x0=";
+  alacritty-themes = fetchFromGitHub {
+    owner = "eendroroy";
+    repo = "alacritty-theme";
+    rev = "master";
+    sha256 = "LVWo7ALlbgpbxoqOOdjIYYO9txwJVwY+F0yA1gTJ+co=";
   };
 in {
   options = {
@@ -53,7 +53,7 @@ in {
           program = "${terminal_init}/bin/init.sh";
           args = [ "alacritty" ];
         };
-        import = [ "${catppuccin-alacritty}/catppuccin-macchiato.yml" ];
+        import = [ "${alacritty-themes}/themes/solarized_dark.yaml" ];
         font = {
           normal = {
             family = font;
@@ -95,7 +95,7 @@ in {
         # Allows for longer session names
         set -g status-left-length 25
         # Force full color support in tmux for alacritty
-        set-option -sa terminal-overrides ',xterm-256color:Tc'
+        set-option -sa terminal-overrides ',alacritty:RGB'
         # Enable scrollback with mouse
         set -g mouse on
       '';

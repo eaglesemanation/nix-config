@@ -56,33 +56,15 @@ require("packer").startup(function(use)
             require("colorizer").setup()
         end,
     })
-    use("kyazdani42/nvim-web-devicons")
-    -- Highly integrated color scheme
+    -- Automatically generates LSP colors for legacy colorschemes
+    use("folke/lsp-colors.nvim")
     use({
-        "catppuccin/nvim",
-        as = "catppuccin",
-        run = function()
-            require("catppuccin").compile()
-        end,
+        "lifepillar/vim-solarized8",
         config = function()
-            require("catppuccin").setup({
-                flavour = "macchiato",
-                integrations = {
-                    cmp = true,
-                    fidget = true,
-                    gitsigns = true,
-                    leap = true,
-                    neotest = true,
-                    telescope = true,
-                    treesitter = true,
-                    treesitter_context = true,
-                    dap = { enabled = true, enable_ui = true },
-                    native_lsp = { enabled = true },
-                },
-            })
-            vim.cmd.colorscheme("catppuccin-macchiato")
+            vim.cmd.colorscheme("solarized8_flat")
         end,
     })
+    use("kyazdani42/nvim-web-devicons")
     use({
         "nvim-lualine/lualine.nvim",
         requires = {
@@ -90,9 +72,7 @@ require("packer").startup(function(use)
             { "catppuccin" },
         },
         config = function()
-            require("lualine").setup({
-                options = { theme = "catppuccin" },
-            })
+            require("lualine").setup()
         end,
     })
     -- Keep cursor position when window below is opened
