@@ -38,6 +38,8 @@ local servers = {
     pylsp = true,
     denols = true,
     rnix = true,
+    -- Configured through nvim-jdtls
+    jdtls = false,
 
     sumneko_lua = {
         settings = {
@@ -53,8 +55,16 @@ local capabilities = vim.lsp.protocol.make_client_capabilities()
 capabilities = cmp_nvim_lsp.default_capabilities(capabilities)
 
 local setup_server = function(server, config)
+    if type(config) == "boolean" and not config then
+        return
+    end
+
     local server_name = lspconfig[server].document_config.default_config.cmd[1]
-    if not config or vim.fn.executable(server_name) ~= 1 then
+    if type(config) == "table" and config.cmd ~= nil and #config.cmd > 0 then
+        server_name = config.cmd[1]
+    end
+
+    if vim.fn.executable(server_name) ~= 1 then
         print(server_name .. " is missing")
         return
     end
@@ -95,6 +105,41 @@ null_ls.setup({
         null_ls.builtins.formatting.terraform_fmt,
         null_ls.builtins.diagnostics.shellcheck,
     }),
+})
+
+vim.api.nvim_create_augroup("nvim-jdtls", {})
+vim.api.nvim_create_autocmd({ "FileType" }, {
+    pattern = { "java" },
+    group = "nvim-jdtls",
+    callback = function()
+        -- Wrapper script for jdtls provided by Nix
+        if vim.fn.executable("jdt-language-server") ~= 1 then
+            print("jdt-language-server is missing")
+            return
+        end
+
+        local cache_path = vim.env.XDG_CACHE_HOME
+        if cache_path == nil then
+            cache_path = vim.env.HOME .. "/.cache"
+        end
+
+        local project_root = vim.fs.dirname(vim.fs.find({ ".gradlew", ".git", "mvnw" }, { upward = true })[1])
+        if project_root == nil then
+            print("could not find project root, set up one of those: gradle, maven, git")
+        end
+        local project_name = vim.fn.fnamemodify(project_root, ":p:h:t")
+
+        local config = {
+            cmd = {
+                "jdt-language-server",
+                "-configuration",
+                cache_path .. "/jdtls/config",
+                "-data",
+                cache_path .. "/jdtls/workspace/" .. project_name,
+            },
+        }
+        require("jdtls").start_or_attach(config)
+    end,
 })
 
 -- Diagnostics Config

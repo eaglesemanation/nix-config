@@ -1,7 +1,6 @@
 { lib, pkgs, config, ... }:
 let
   inherit (lib) mkEnableOption mkIf;
-  inherit (pkgs.emnt-lib) derivations_bins;
   cfg = config.bundles.dev_env.rust;
 in {
   options.bundles.dev_env.rust.enable =

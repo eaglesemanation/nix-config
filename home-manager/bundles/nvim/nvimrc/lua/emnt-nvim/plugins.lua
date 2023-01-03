@@ -121,6 +121,8 @@ require("packer").startup(function(use)
         "neovim/nvim-lspconfig",
         as = "lspconfig",
         requires = {
+            -- Java specific configuration with additional features
+            { "mfussenegger/nvim-jdtls" },
             -- Progress bar for language server indexing
             {
                 "j-hui/fidget.nvim",
@@ -141,6 +143,7 @@ require("packer").startup(function(use)
             { "hrsh7th/cmp-nvim-lsp" },
         },
     })
+    -- Integration layer between linters/formatters and LSP
     use("jose-elias-alvarez/null-ls.nvim")
 
     -- Debugger
