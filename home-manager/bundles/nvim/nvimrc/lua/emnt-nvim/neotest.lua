@@ -25,6 +25,7 @@ neotest.setup({
                 test_table = true,
             },
         }),
+        require("neotest-rust"),
     },
 })
 
@@ -37,13 +38,27 @@ hydra({
         color = "blue",
     },
     heads = {
-        { "r", neotest.run.run, { desc = "[r]un a test under cursor" } },
+        { "t", neotest.run.run, { desc = "run a [t]est under cursor" } },
         {
-            "R",
+            "T",
             function()
                 neotest.run.run(vim.fn.getcwd())
             end,
-            { desc = "[R]un all tests in CWD" },
+            { desc = "run all [T]ests in CWD" },
+        },
+        {
+            "d",
+            function()
+                neotest.run.run({ strategy = "dap" })
+            end,
+            { desc = "[d]ebug a test under cursor" },
+        },
+        {
+            "D",
+            function()
+                neotest.run.run({ vim.fn.getcwd(), strategy = "dap" })
+            end,
+            { desc = "[D]ebug all tests in CWD" },
         },
     },
 })

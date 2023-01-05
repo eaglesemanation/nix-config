@@ -20,6 +20,8 @@ in {
   config = mkIf cfg.enable {
     home.packages = builtins.attrValues {
       inherit (pkgs) openjdk gradle;
+      inherit (pkgs.vscode-extensions.vscjava)
+        vscode-java-debug vscode-java-test;
       inherit jdtls;
     };
   };

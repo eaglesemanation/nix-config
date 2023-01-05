@@ -69,10 +69,9 @@ require("packer").startup(function(use)
         "nvim-lualine/lualine.nvim",
         requires = {
             { "kyazdani42/nvim-web-devicons", opt = true },
-            { "catppuccin" },
         },
         config = function()
-            require("lualine").setup()
+            require("lualine").setup({})
         end,
     })
     -- Keep cursor position when window below is opened
@@ -112,11 +111,18 @@ require("packer").startup(function(use)
                     })
                 end,
             },
-            -- Configures lua language server for neovim config
+            -- Configures lua language server for neovim specific api
             {
                 "folke/neodev.nvim",
                 config = function()
-                    require("neodev").setup({})
+                    require("neodev").setup({
+                        override = function(root_dir, library)
+                            if #(vim.fs.find({ "nix-config" }, { path = root_dir, upward = true })) > 0 then
+                                library.enabled = true
+                                library.plugins = true
+                            end
+                        end,
+                    })
                 end,
             },
             -- Autocompletion integration
@@ -143,10 +149,10 @@ require("packer").startup(function(use)
         "nvim-neotest/neotest",
         requires = {
             { "nvim-lua/plenary.nvim" },
-            { "nvim-treesitter/nvim-treesitter" },
             { "nvim-neotest/neotest-go" },
+            { "rouge8/neotest-rust" },
         },
-        after = { "hydra" },
+        after = { "hydra", "treesitter" },
         config = function()
             require("emnt-nvim.neotest")
         end,
@@ -155,6 +161,7 @@ require("packer").startup(function(use)
     -- Improved syntax support
     use({
         "nvim-treesitter/nvim-treesitter",
+        as = "treesitter",
         requires = {
             -- Keep current context at the top of buffer (for example function name)
             { "nvim-treesitter/nvim-treesitter-context" },

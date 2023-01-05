@@ -7,6 +7,7 @@ in {
     mkEnableOption "Go lang development environment";
 
   config = mkIf cfg.enable {
-    home.packages = builtins.attrValues { inherit (pkgs) go gopls delve; };
+    home.packages =
+      builtins.attrValues { inherit (pkgs) go golangci-lint gopls delve; };
   };
 }
