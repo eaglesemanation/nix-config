@@ -11,7 +11,7 @@ end
 
 local packer_bootstrap = ensure_packer()
 
-require("packer").startup(function(use)
+local function packer_setup(use)
     -- Self-manage plugin manager
     use("wbthomason/packer.nvim")
 
@@ -245,8 +245,20 @@ require("packer").startup(function(use)
         end,
     })
 
+    use("dstein64/vim-startuptime")
+
     -- Setup on first boot
     if packer_bootstrap then
         require("packer").sync()
     end
-end)
+end
+
+require("packer").startup({
+    packer_setup,
+    config = {
+        profile = {
+            enable = true,
+            threshold = 1,
+        },
+    },
+})

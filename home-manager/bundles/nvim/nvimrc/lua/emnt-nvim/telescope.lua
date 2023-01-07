@@ -40,16 +40,6 @@ telescope.setup({
 telescope.load_extension("fzf")
 telescope.load_extension("ui-select")
 
--- git_files with fallback for find_files
-local function project_files()
-    local in_git_repo = vim.fn.systemlist("git rev-parse --is-inside-work-tree")[1] == "true"
-    if in_git_repo then
-        builtin.git_files()
-    else
-        builtin.find_files()
-    end
-end
-
 hydra({
     name = "Fuzzy finder",
     mode = "n",
@@ -60,8 +50,9 @@ hydra({
     },
     heads = {
         -- File pickers
-        { "f", project_files, { desc = "project [f]iles" } },
-        { "g", cmd("Telescope live_grep"), { desc = "[g]rep" } },
-        { "b", cmd("Telescope buffers"), { desc = "[b]uffers" } },
+        { "f", builtin.find_files, { desc = "project [f]iles" } },
+        { "g", builtin.live_grep, { desc = "[g]rep" } },
+        { "b", builtin.buffers, { desc = "[b]uffers" } },
+        { "s", builtin.treesitter, { desc = "[s]ymbols" } },
     },
 })

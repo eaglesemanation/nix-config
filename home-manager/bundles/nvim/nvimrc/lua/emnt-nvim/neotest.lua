@@ -38,27 +38,36 @@ hydra({
         color = "blue",
     },
     heads = {
-        { "t", neotest.run.run, { desc = "run a [t]est under cursor" } },
-        {
-            "T",
-            function()
-                neotest.run.run(vim.fn.getcwd())
-            end,
-            { desc = "run all [T]ests in CWD" },
-        },
+        { "t", neotest.run.run, { desc = "[t]est" } },
         {
             "d",
             function()
                 neotest.run.run({ strategy = "dap" })
             end,
-            { desc = "[d]ebug a test under cursor" },
+            { desc = "[d]ebug test" },
         },
         {
-            "D",
+            "f",
             function()
-                neotest.run.run({ vim.fn.getcwd(), strategy = "dap" })
+                neotest.run.run(vim.fn.expand("%"))
             end,
-            { desc = "[D]ebug all tests in CWD" },
+            { desc = "[f]ile" },
+        },
+        {
+            "T",
+            function()
+                neotest.run.run(vim.fn.getcwd())
+            end,
+            { desc = "all [T]ests" },
+        },
+        { "s", neotest.run.stop, { desc = "[s]top" } },
+        {
+            "u",
+            function()
+                neotest.summary.toggle()
+                neotest.output_panel.toggle()
+            end,
+            { desc = "[u]i" },
         },
     },
 })

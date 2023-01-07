@@ -27,6 +27,21 @@ if vim.fn.executable("dlv") == 1 then
     }
 end
 
+vim.api.nvim_create_augroup("dap_dynamic_config", { clear = true })
+-- TODO: Figure out how to reduce amount of tries to load launch.json while keeping it easy to use
+vim.api.nvim_create_autocmd({ "BufEnter, BufWinEnter" }, {
+    callback = function()
+        local vscode_dir = vim.fs.find(".vscode", { upwards = true })[1]
+        if vscode_dir == nil then
+            return
+        end
+        if vim.fn.filereadable(vscode_dir .. "/launch.json") == 0 then
+            return
+        end
+        require("dap.ext.vscode").load_launchjs(vscode_dir .. "/launch.json")
+    end,
+})
+
 -- Start debugging session
 local function run_dap(args)
     args = args or {}
