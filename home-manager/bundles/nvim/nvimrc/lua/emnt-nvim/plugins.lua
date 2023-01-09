@@ -116,6 +116,7 @@ local function packer_setup(use)
                 "folke/neodev.nvim",
                 config = function()
                     require("neodev").setup({
+                        -- Enable nvim LSP overrides for nix flake project
                         override = function(root_dir, library)
                             if #(vim.fs.find({ "nix-config" }, { path = root_dir, upward = true })) > 0 then
                                 library.enabled = true

@@ -22,8 +22,8 @@ let
   alacritty-themes = fetchFromGitHub {
     owner = "eendroroy";
     repo = "alacritty-theme";
-    rev = "master";
-    sha256 = "LVWo7ALlbgpbxoqOOdjIYYO9txwJVwY+F0yA1gTJ+co=";
+    rev = "1e0dbc5530ce1297cacfb17dcae1366ecf581af6";
+    sha256 = "iSJOmMd8rDTJc7B+X6WQ5hCs281NS+igPycW3rN4ifc=";
   };
 in {
   options = {

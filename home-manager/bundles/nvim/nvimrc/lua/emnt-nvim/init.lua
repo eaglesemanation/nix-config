@@ -1,7 +1,7 @@
 -- Expand "<leader>" to this value
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
--- Avoid delay for any command that is prefixed with space
+-- Avoid useless movement with space in normal and visual modes
 vim.keymap.set({ "n", "v" }, "<Space>", "<Nop>", { silent = true })
 
 -- Don't limit colors to 256 in terminal
