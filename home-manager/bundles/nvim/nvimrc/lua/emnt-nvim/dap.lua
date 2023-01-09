@@ -45,7 +45,7 @@ vim.api.nvim_create_autocmd({ "BufEnter, BufWinEnter" }, {
 
 local function set_conditional_breakpoint()
     vim.ui.input({
-        prompt = "Breakpoint condition:",
+        prompt = "Breakpoint condition: ",
     }, function(condition)
         dap.set_breakpoint(condition)
     end)
@@ -59,7 +59,7 @@ hydra({
         invoke_on_body = true,
     },
     heads = {
-        { "d", dap.continue, { exit = true, desc = "run" } },
+        { "c", dap.continue, { exit = true, desc = "run / [c]ontinue" } },
         { "b", dap.toggle_breakpoint, { desc = "[b]reakpoint" } },
         { "B", set_conditional_breakpoint, { desc = "conditional [B]reakpoint" } },
         { "s", dap.step_into, { desc = "[s]tep into" } },

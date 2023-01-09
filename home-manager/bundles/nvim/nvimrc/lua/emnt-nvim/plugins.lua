@@ -100,8 +100,6 @@ local function packer_setup(use)
         "neovim/nvim-lspconfig",
         as = "lspconfig",
         requires = {
-            -- Java specific configuration with additional features
-            { "mfussenegger/nvim-jdtls" },
             -- Progress bar for language server indexing
             {
                 "j-hui/fidget.nvim",
@@ -136,12 +134,23 @@ local function packer_setup(use)
     -- Debugger
     use({
         "mfussenegger/nvim-dap",
+        as = "dap",
         requires = {
             { "rcarriga/nvim-dap-ui" },
         },
         after = { "hydra" },
         config = function()
             require("emnt-nvim.dap")
+        end,
+    })
+
+    -- Java specific LSP and DAP configuration with additional features
+    use({
+        "mfussenegger/nvim-jdtls",
+        ft = { "java" },
+        after = { "lspconfig", "dap" },
+        config = function()
+            require("emnt-nvim.jdtls")
         end,
     })
 
