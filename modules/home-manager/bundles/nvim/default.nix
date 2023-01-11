@@ -46,7 +46,5 @@ in {
       viAlias = true;
       vimdiffAlias = true;
     };
-
-    programs.neovide.enable = true;
   };
 }
