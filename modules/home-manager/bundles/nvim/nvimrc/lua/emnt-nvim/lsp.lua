@@ -46,6 +46,7 @@ local servers = {
             Lua = {
                 completion = { callSnippet = "Replace" },
                 telemetry = { enable = false },
+                workspace = { library = { "${3rd}/luassert/library" } },
             },
         },
     },

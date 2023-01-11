@@ -1,7 +1,5 @@
 { lib, pkgs, inputs, outputs, ... }: {
   imports = [
-    # Software that is grouped by usage, for ease of configuring different systems with just a few flags
-    ./bundles
     # Hacks specific for host OS
     ./host_os
     # Cachix integration with home-manager

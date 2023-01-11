@@ -2,8 +2,7 @@
 let
   inherit (lib) mkOption types mkEnableOption mkIf;
   cfg = config.bundles.secrets;
-in
-{
+in {
   options = {
     bundles.secrets = {
       enable = mkEnableOption "Secrets management bundle";
@@ -13,7 +12,8 @@ in
       };
       email = mkOption {
         type = types.str;
-        description = "Email address used in GnuPG public key for automatic detection. Also will be used for git config";
+        description =
+          "Email address used in GnuPG public key for automatic detection. Also will be used for git config";
       };
       name = mkOption {
         type = types.str;
@@ -23,9 +23,10 @@ in
   };
 
   config = mkIf cfg.enable {
-    home.packages = with pkgs; [
-      sops # Secrets management in YAML with GPG
-    ];
+    home.packages = with pkgs;
+      [
+        sops # Secrets management in YAML with GPG
+      ];
 
     programs.gpg = {
       enable = true;
@@ -51,9 +52,7 @@ in
       pinentryFlavor = "gnome3";
     };
 
-    programs.ssh = {
-      enable = true;
-    };
+    programs.ssh = { enable = true; };
 
     programs.git = {
       enable = true;
@@ -71,14 +70,11 @@ in
 
     programs.password-store = {
       enable = true;
-      package = pkgs.pass.withExtensions (exts: with exts; [ pass-otp pass-update ]);
-      settings = {
-        PASSWORD_STORE_DIR = "${config.xdg.dataHome}/pass-store";
-      };
+      package =
+        pkgs.pass.withExtensions (exts: with exts; [ pass-otp pass-update ]);
+      settings = { PASSWORD_STORE_DIR = "${config.xdg.dataHome}/pass-store"; };
     };
 
-    programs.browserpass = {
-      enable = true;
-    };
+    programs.browserpass = { enable = true; };
   };
 }
