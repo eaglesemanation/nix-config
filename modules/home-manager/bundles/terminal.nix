@@ -95,7 +95,7 @@ in {
         # Allows for longer session names
         set -g status-left-length 25
         # Force full color support in tmux for alacritty
-        set-option -sa terminal-overrides ',alacritty:RGB'
+        set-option -sa terminal-overrides ',alacritty:RGB,xterm-256color:RGB'
         # Enable scrollback with mouse
         set -g mouse on
       '';

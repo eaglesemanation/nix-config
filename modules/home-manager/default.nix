@@ -1,4 +1,1 @@
-{
-  neovide = import ./neovide.nix;
-  bundles = import ./bundles;
-}
+{ ... }: { imports = [ ./bundles ./neovide.nix ]; }

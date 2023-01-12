@@ -1,3 +1,5 @@
+local M = {}
+
 -- Avoids failing during bootstrap
 local ok, cmp = pcall(require, "cmp")
 if not ok then
@@ -55,18 +57,21 @@ local servers = {
 local capabilities = vim.lsp.protocol.make_client_capabilities()
 capabilities = cmp_nvim_lsp.default_capabilities(capabilities)
 
-local setup_server = function(server, config)
-    if type(config) == "boolean" and not config then
-        return
-    end
-
+local server_exists = function(server, config)
     local server_name = lspconfig[server].document_config.default_config.cmd[1]
     if type(config) == "table" and config.cmd ~= nil and #config.cmd > 0 then
         server_name = config.cmd[1]
     end
 
-    if vim.fn.executable(server_name) ~= 1 then
-        print(server_name .. " is missing")
+    return vim.fn.executable(server_name) == 1
+end
+
+local setup_server = function(server, config)
+    if type(config) == "boolean" and not config then
+        return
+    end
+
+    if not server_exists(server, config) then
         return
     end
 
@@ -84,47 +89,51 @@ local setup_server = function(server, config)
     lspconfig[server].setup(config)
 end
 
-for server, config in pairs(servers) do
-    setup_server(server, config)
+local null_ls_sources = {
+    null_ls.builtins.formatting.trim_whitespace,
+    null_ls.builtins.formatting.trim_newlines,
+    null_ls.builtins.formatting.stylua,
+    null_ls.builtins.formatting.terraform_fmt,
+    null_ls.builtins.diagnostics.shellcheck,
+    null_ls.builtins.diagnostics.golangci_lint,
+}
+
+local function null_ls_source_exists(source)
+    return vim.fn.executable(source._opts.command) == 1
 end
 
-local function null_ls_filter_executable(sources)
+local function null_ls_filter_executable()
     local res = {}
-    for i, source in pairs(sources) do
-        if vim.fn.executable(source._opts.command) == 1 then
-            res[i] = source
-        else
-            print(source._opts.command .. " is missing")
+    for _, source in pairs(null_ls_sources) do
+        if null_ls_source_exists(source) then
+            table.insert(res, source)
         end
     end
     return res
 end
 
-null_ls.setup({
-    sources = null_ls_filter_executable({
-        null_ls.builtins.formatting.trim_whitespace,
-        null_ls.builtins.formatting.trim_newlines,
-        null_ls.builtins.formatting.stylua,
-        null_ls.builtins.formatting.terraform_fmt,
-        null_ls.builtins.diagnostics.shellcheck,
-        null_ls.builtins.diagnostics.golangci_lint,
-    }),
-})
+local function setup_servers()
+    for server, config in pairs(servers) do
+        setup_server(server, config)
+    end
+    null_ls.setup({
+        sources = null_ls_filter_executable(),
+    })
+end
 
 -- Diagnostics Config
-
--- Set diganostic sign icons
--- https://github.com/neovim/nvim-lspconfig/wiki/UI-customization#change-diagnostic-symbols-in-the-sign-column-gutter
-local signs = { Error = " ", Warning = " ", Hint = " ", Information = " " }
-for type, icon in pairs(signs) do
-    local hl = "LspDiagnosticsSign" .. type
-    vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = hl })
+local function setup_diagnostics()
+    -- Set diganostic sign icons
+    -- https://github.com/neovim/nvim-lspconfig/wiki/UI-customization#change-diagnostic-symbols-in-the-sign-column-gutter
+    local signs = { Error = " ", Warning = " ", Hint = " ", Information = " " }
+    for type, icon in pairs(signs) do
+        local hl = "LspDiagnosticsSign" .. type
+        vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = hl })
+    end
 end
 
 -- Autocomplete Config
-vim.o.completeopt = "menuone,noselect"
-
-cmp.setup({
+local cmp_conf = {
     snippet = {
         expand = function(args)
             luasnip.lsp_expand(args.body)
@@ -166,9 +175,14 @@ cmp.setup({
             end
         end, { "i", "s" }),
     }),
-})
+}
 
-hydra({
+local function setup_cmp()
+    vim.o.completeopt = "menuone,noselect"
+    cmp.setup(cmp_conf)
+end
+
+local hydra_conf = {
     name = "LSP",
     mode = "n",
     body = "<leader>s",
@@ -184,4 +198,34 @@ hydra({
         { "r", vim.lsp.buf.rename, { desc = "[r]ename" } },
         { "a", vim.lsp.buf.code_action, { desc = "code [a]ction" } },
     },
-})
+}
+
+M.check_health = function()
+    for server, config in pairs(servers) do
+        if type(config) == "boolean" and not config then
+            goto continue
+        end
+        if server_exists(server, config) then
+            vim.health.report_ok(server .. " installed")
+        else
+            vim.health.report_error(server .. " not installed")
+        end
+        ::continue::
+    end
+    for _, source in pairs(null_ls_sources) do
+        if null_ls_source_exists(source) then
+            vim.health.report_ok(source._opts.command .. " installed")
+        else
+            vim.health.report_error(source._opts.command .. " not installed")
+        end
+    end
+end
+
+M.setup = function()
+    setup_servers()
+    setup_cmp()
+    setup_diagnostics()
+    hydra(hydra_conf)
+end
+
+return M

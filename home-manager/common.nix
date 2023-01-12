@@ -4,7 +4,9 @@
     ./host_os
     # Cachix integration with home-manager
     inputs.declarative-cachix.homeManagerModules.declarative-cachix
-  ] ++ builtins.attrValues outputs.homeManagerModules;
+    # Provides "bundles"
+    outputs.homeManagerModules
+  ];
 
   # Nicely reload system units when changing configs
   systemd.user.startServices = "sd-switch";
