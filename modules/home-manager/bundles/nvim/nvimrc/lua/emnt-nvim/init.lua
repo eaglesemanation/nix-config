@@ -27,8 +27,7 @@ vim.opt.shiftwidth = 0
 vim.opt.softtabstop = 0
 -- Replace tabs with spaces
 vim.opt.expandtab = true
--- Add Russian for spelling check
-vim.opt.spelllang = "en,ru"
+-- Check for spelling errors (with treesitter integration)
 vim.opt.spell = true
 -- Use persistent undo files for recovery
 vim.opt.swapfile = false
