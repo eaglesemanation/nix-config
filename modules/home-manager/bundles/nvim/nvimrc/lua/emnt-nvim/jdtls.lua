@@ -1,3 +1,5 @@
+local utils = require("emnt-nvim.utils")
+
 local function jdtls_setup()
     -- Wrapper script for jdtls provided by Nix
     if vim.fn.executable("jdt-language-server") ~= 1 then
@@ -10,7 +12,7 @@ local function jdtls_setup()
         cache_path = vim.env.HOME .. "/.cache"
     end
 
-    local project_root = vim.fs.dirname(vim.fs.find({ ".gradlew", ".git", "mvnw" }, { upward = true })[1])
+    local project_root = vim.fs.dirname(utils.find_upwards({ ".gradlew", ".git", "mvnw" }))
     if project_root == nil then
         print("could not find project root, set up one of those: gradle, maven, git")
         return

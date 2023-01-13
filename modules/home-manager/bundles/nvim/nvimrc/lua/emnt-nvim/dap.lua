@@ -6,6 +6,8 @@ end
 local dapui = require("dapui")
 local hydra = require("hydra")
 
+local utils = require("emnt-nvim.utils")
+
 -- Use default config for now
 dapui.setup()
 
@@ -32,7 +34,7 @@ vim.api.nvim_create_augroup("dap_dynamic_config", { clear = true })
 vim.api.nvim_create_autocmd({ "BufEnter, BufWinEnter" }, {
     group = "dap_dynamic_config",
     callback = function()
-        local vscode_dir = vim.fs.find(".vscode", { upwards = true })[1]
+        local vscode_dir = utils.find_upwards(".vscode")
         if vscode_dir == nil then
             return
         end

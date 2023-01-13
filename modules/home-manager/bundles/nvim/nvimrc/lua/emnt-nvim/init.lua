@@ -53,4 +53,8 @@ vim.keymap.set("n", "<leader>L", ":wincmd L<cr>")
 vim.keymap.set("n", "<leader>-", ":split<cr>")
 vim.keymap.set("n", "<leader>|", ":vsplit<cr>")
 
+function P(val)
+    print(vim.inspect(val))
+end
+
 require("emnt-nvim.plugins")
