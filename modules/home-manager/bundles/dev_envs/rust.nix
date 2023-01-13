@@ -8,15 +8,10 @@ in {
 
   config = mkIf cfg.enable {
     home.packages = [
-      (pkgs.fenix.complete.withComponents [
-        "cargo"
-        "clippy"
-        "rust-src"
-        "rustc"
-        "rustfmt"
-      ])
-    ] ++ builtins.attrValues {
-      inherit (pkgs) rust-analyzer-nightly cargo-nextest;
-    };
+      (pkgs.rust-bin.selectLatestNightlyWith (toolchain:
+        toolchain.default.override {
+          extensions = [ "rust-src" "rust-analyzer" ];
+        }))
+    ];
   };
 }

@@ -32,11 +32,7 @@
     };
 
     # Custom rust toolchains
-    fenix = {
-      url = "github:nix-community/fenix";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
+    rust-overlay.url = "github:oxalica/rust-overlay";
   };
 
   outputs =
@@ -106,12 +102,7 @@
           overlays = builtins.attrValues {
             inherit (outputs.overlays) additions modifications;
             nixgl = inputs.nixgl.overlay;
-            # https://github.com/nix-community/fenix/issues/79
-            fenix = (_: super:
-              let
-                pkgs =
-                  inputs.fenix.inputs.nixpkgs.legacyPackages.${super.system};
-              in inputs.fenix.overlays.default pkgs pkgs);
+            rust-overlay = inputs.rust-overlay.overlays.default;
           };
           config.allowUnfree = true;
         });
