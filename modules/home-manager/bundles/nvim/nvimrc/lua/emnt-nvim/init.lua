@@ -33,8 +33,6 @@ vim.opt.spell = true
 vim.opt.swapfile = false
 vim.opt.backup = false
 vim.opt.undofile = true
--- Keep cursor in the middle of the screen
-vim.opt.scrolloff = 999
 -- Remove search highlights, but keep highlight while writing regex
 vim.opt.hlsearch = false
 vim.opt.incsearch = true
@@ -52,6 +50,9 @@ vim.keymap.set("n", "<leader>L", ":wincmd L<cr>")
 -- Split windows
 vim.keymap.set("n", "<leader>-", ":split<cr>")
 vim.keymap.set("n", "<leader>|", ":vsplit<cr>")
+-- Recenter after moving half a page
+vim.keymap.set("n", "<C-d>", "<C-d>zz")
+vim.keymap.set("n", "<C-u>", "<C-u>zz")
 
 function P(val)
     print(vim.inspect(val))

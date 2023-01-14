@@ -139,6 +139,13 @@ local function packer_setup(use)
     -- Integration layer between linters/formatters and LSP
     use("jose-elias-alvarez/null-ls.nvim")
 
+    -- Task executor
+    use({
+        "stevearc/overseer.nvim",
+        config = function()
+            require("overseer").setup()
+        end,
+    })
     -- Debugger
     use({
         "mfussenegger/nvim-dap",
@@ -158,7 +165,7 @@ local function packer_setup(use)
         ft = { "java" },
         after = { "lspconfig", "dap" },
         config = function()
-            require("emnt-nvim.jdtls")
+            require("emnt-nvim.jdtls").setup()
         end,
     })
 

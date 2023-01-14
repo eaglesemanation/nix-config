@@ -1,9 +1,52 @@
+local M = {}
+
 local utils = require("emnt-nvim.utils")
+
+local function extensions_dir_path()
+    for _, ext_path in pairs({ "~/.nix-profile/share/vscode/extensions", "~/.vscode/extensions" }) do
+        local abs_ext_path = vim.fs.normalize(ext_path)
+        if vim.fn.isdirectory(abs_ext_path) then
+            return abs_ext_path
+        end
+    end
+    return nil
+end
+
+local function extension_path(ext_root, ext_name)
+    local ext_glob = ext_root
+        .. "/vscjava.vscode-java-"
+        .. ext_name
+        .. "/server/com.microsoft.java."
+        .. ext_name
+        .. ".plugin-*.jar"
+    local matches = vim.fn.glob(ext_glob, true, true)
+    if #matches == 1 then
+        return matches[1]
+    else
+        return nil
+    end
+end
+
+local function extensions_list()
+    local ext_root = extensions_dir_path()
+    if ext_root == nil then
+        return {}
+    end
+    local extensions = {}
+    local test = extension_path(ext_root, "test")
+    local debug = extension_path(ext_root, "debug")
+    if test ~= nil then
+        table.insert(extensions, test)
+    end
+    if debug ~= nil then
+        table.insert(extensions, debug)
+    end
+    return extensions
+end
 
 local function jdtls_setup()
     -- Wrapper script for jdtls provided by Nix
     if vim.fn.executable("jdt-language-server") ~= 1 then
-        print("jdt-language-server is missing")
         return
     end
 
@@ -19,19 +62,6 @@ local function jdtls_setup()
     end
     local project_name = vim.fn.fnamemodify(project_root, ":p:h:t")
 
-    -- Look for vscode extensions for DAP support
-    local bundles = {}
-    for _, ext_path in pairs({ "~/.nix-profile/share/vscode/extensions", "~/.vscode/extensions" }) do
-        local abs_ext_path = vim.fs.normalize(ext_path)
-        if vim.fn.isdirectory(abs_ext_path) then
-            local debug_glob = abs_ext_path .. "/vscjava.vscode-java-debug/server/com.microsoft.java.debug.plugin-*.jar"
-            local test_glob = abs_ext_path .. "/vscjava.vscode-java-test/server/com.microsoft.java.test.plugin-*.jar"
-            vim.list_extend(bundles, vim.split(vim.fn.glob(debug_glob, true), "\n", {}), 1, #bundles)
-            vim.list_extend(bundles, vim.split(vim.fn.glob(test_glob, true), "\n", {}), 1, #bundles)
-            break
-        end
-    end
-
     local config = {
         cmd = {
             "jdt-language-server",
@@ -41,7 +71,7 @@ local function jdtls_setup()
             cache_path .. "/jdtls/workspace/" .. project_name,
         },
         init_options = {
-            bundles = bundles,
+            bundles = extensions_list(),
         },
         on_attach = function(_, _)
             -- Set up DAP adapter
@@ -70,9 +100,37 @@ local function jdtls_setup()
     require("jdtls").start_or_attach(config)
 end
 
-vim.api.nvim_create_augroup("nvim-jdtls", {})
-vim.api.nvim_create_autocmd({ "FileType" }, {
-    pattern = { "java" },
-    group = "nvim-jdtls",
-    callback = jdtls_setup,
-})
+M.check_health = function()
+    local server = "jdt-language-server"
+    if vim.fn.executable(server) == 1 then
+        vim.health.report_ok(server .. " installed")
+    else
+        vim.health.report_error(server .. " not installed")
+    end
+    local ext_root = extensions_dir_path()
+    if ext_root == nil then
+        vim.health.report_error("could not find vscode extensions dir")
+    else
+        if extension_path(ext_root, "test") ~= nil then
+            vim.health.report_ok("java test extension installed")
+        else
+            vim.health.report_error("could not find java test extension")
+        end
+        if extension_path(ext_root, "debug") ~= nil then
+            vim.health.report_ok("java debug extension installed")
+        else
+            vim.health.report_error("could not find java debug extension")
+        end
+    end
+end
+
+M.setup = function()
+    vim.api.nvim_create_augroup("nvim-jdtls", {})
+    vim.api.nvim_create_autocmd({ "FileType" }, {
+        pattern = { "java" },
+        group = "nvim-jdtls",
+        callback = jdtls_setup,
+    })
+end
+
+return M
