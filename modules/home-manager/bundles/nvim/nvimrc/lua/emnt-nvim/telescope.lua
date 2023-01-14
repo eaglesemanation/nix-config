@@ -50,8 +50,20 @@ hydra({
     },
     heads = {
         -- File pickers
-        { "f", builtin.find_files, { desc = "project [f]iles" } },
-        { "g", builtin.live_grep, { desc = "[g]rep" } },
+        {
+            "f",
+            function()
+                builtin.find_files({ hidden = true })
+            end,
+            { desc = "project [f]iles" },
+        },
+        {
+            "g",
+            function()
+                builtin.live_grep({ additional_args = { "--hidden" } })
+            end,
+            { desc = "[g]rep" },
+        },
         { "b", builtin.buffers, { desc = "[b]uffers" } },
         { "s", builtin.treesitter, { desc = "[s]ymbols" } },
     },

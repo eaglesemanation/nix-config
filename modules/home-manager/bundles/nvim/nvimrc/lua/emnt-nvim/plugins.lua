@@ -29,7 +29,15 @@ local function packer_setup(use)
             require("leap").add_default_mappings()
         end,
     })
+    -- Add custom modes
     use({ "anuvyklack/hydra.nvim", as = "hydra" })
+    -- Draw diagrams
+    use({
+        "jbyuki/venn.nvim",
+        config = function()
+            require("emnt-nvim.venn")
+        end,
+    })
 
     -- Fuzzy search
     use({

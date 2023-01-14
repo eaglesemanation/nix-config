@@ -35,9 +35,9 @@ in {
       '';
     };
 
-    xdg.configFile.nvimDevEnvs = {
-      text = builtins.toJSON config.bundles.dev_envs.environments;
-      target = "nvim/devenvs.json";
+    home.file.ignore = {
+      source = ./.ignore;
+      target = ".ignore";
     };
 
     programs.neovim = {
