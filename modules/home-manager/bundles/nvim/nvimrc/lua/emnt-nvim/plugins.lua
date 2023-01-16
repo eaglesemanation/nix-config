@@ -231,7 +231,7 @@ local function packer_setup(use)
             "hydra",
         },
         config = function()
-            require("emnt-nvim.lsp")
+            require("emnt-nvim.lsp").setup()
         end,
     })
 
