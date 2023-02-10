@@ -4,5 +4,6 @@
   bundles = {
     terminal.enable = true;
     nvim.enable = true;
+    cli_tools.enable = true;
   };
 }

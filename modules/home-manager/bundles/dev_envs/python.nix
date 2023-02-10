@@ -8,8 +8,8 @@ in {
 
   config = mkIf cfg.enable {
     home.packages = builtins.attrValues {
-      inherit (pkgs) python3 poetry;
-      inherit (pkgs.python3Packages) python-lsp-server;
+      inherit (pkgs) python3 pipx poetry;
+      inherit (pkgs.python3Packages) pip python-lsp-server;
     };
   };
 }

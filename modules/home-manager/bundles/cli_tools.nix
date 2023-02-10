@@ -12,7 +12,10 @@ in {
       xh # httpie analog written in Rust, simple CLI for HTTP requests
     ];
 
-    programs.zsh.shellAliases = { http = "xh"; };
+    programs.zsh.shellAliases = {
+      http = "xh";
+      https = "xh --https";
+    };
 
     # Shell prompt
     programs.starship = {

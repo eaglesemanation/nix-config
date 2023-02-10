@@ -24,6 +24,11 @@
     };
   };
 
+  bundles.nvim.gitUrl = {
+    fetch = "https://github.com/eaglesemanation/nvim-config.git";
+    push = "git@github.com:eaglesemanation/nvim-config.git";
+  };
+
   nix = {
     package = pkgs.nix;
     settings = {
