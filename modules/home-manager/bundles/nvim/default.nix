@@ -45,8 +45,8 @@ in {
         exit 0
       fi
 
-      if [ -z "$XDG_CONFIG_HOME" ]; then
-        XDG_CONFIG_HOME="$HOME/.config"
+      if [ ! -v XDG_CONFIG_HOME ] || [ -z "$XDG_CONFIG_HOME" ]; then
+        export XDG_CONFIG_HOME="$HOME/.config"
       fi
       CONF_PATH="$XDG_CONFIG_HOME/nvim"
       if [ ! -d "$CONF_PATH" ]; then
