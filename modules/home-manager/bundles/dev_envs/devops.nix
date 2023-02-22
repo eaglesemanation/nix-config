@@ -9,7 +9,7 @@ in {
     home.packages = builtins.attrValues {
       inherit (pkgs)
         shellcheck terraform terraform-ls yaml-language-server kubectl kubectx
-        kind;
+        kind clusterctl talosctl;
     };
   };
 }
