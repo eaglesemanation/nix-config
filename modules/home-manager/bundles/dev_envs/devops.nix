@@ -8,8 +8,8 @@ in {
   config = mkIf cfg.enable {
     home.packages = builtins.attrValues {
       inherit (pkgs)
-        shellcheck terraform terraform-ls yaml-language-server kubectl kubectx
-        kind clusterctl talosctl;
+        shellcheck terraform terraform-ls vagrant packer yaml-language-server
+        yamlfmt kubectl kubectx kind clusterctl talosctl fluxcd cmctl;
     };
   };
 }

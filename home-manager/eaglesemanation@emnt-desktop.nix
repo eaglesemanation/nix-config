@@ -2,10 +2,7 @@
   imports = [ ./common.nix ];
 
   bundles = {
-    dev_envs = {
-      enable = true;
-      disableEnvironments = [ "python" ];
-    };
+    dev_envs = { enable = true; };
     secrets = {
       enable = true;
       name = "Vladimir Romashchenko";

@@ -1,8 +1,5 @@
 {
-  additions = final: prev:
-    {
-      emnt-lib = import ../lib { lib = final.lib; };
-    } // import ../pkgs { pkgs = final; };
+  additions = final: prev: import ../pkgs { pkgs = final; };
 
   # This one contains whatever you want to overlay
   # You can change versions, add patches, set compilation flags, anything really.

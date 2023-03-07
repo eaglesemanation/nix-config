@@ -23,10 +23,10 @@ in {
   };
 
   config = mkIf cfg.enable {
-    home.packages = with pkgs;
-      [
-        sops # Secrets management in YAML with GPG
-      ];
+    home.packages = with pkgs; [
+      sops # Secrets management in YAML with GPG
+      age # Modern alternative to PGP
+    ];
 
     programs.gpg = {
       enable = true;
