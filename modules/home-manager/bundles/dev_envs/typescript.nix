@@ -7,6 +7,9 @@ in {
     mkEnableOption "TypeScript development environment";
 
   config = mkIf cfg.enable {
-    home.packages = builtins.attrValues { inherit (pkgs) deno; };
+    home.packages = builtins.attrValues {
+      inherit (pkgs) deno nodejs;
+      inherit (pkgs.nodePackages) yarn pnpm;
+    };
   };
 }

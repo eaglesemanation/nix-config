@@ -7,6 +7,6 @@ in {
     mkEnableOption "Nix development environment";
 
   config = mkIf cfg.enable {
-    home.packages = builtins.attrValues { inherit (pkgs) rnix-lsp nixfmt; };
+    home.packages = builtins.attrValues { inherit (pkgs) nixfmt nil; };
   };
 }
