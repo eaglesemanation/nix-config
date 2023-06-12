@@ -11,7 +11,10 @@ in {
       (pkgs.rust-bin.selectLatestNightlyWith (toolchain:
         toolchain.default.override {
           extensions = [ "rust-src" "rust-analyzer" ];
+          targets = [ "wasm32-unknown-unknown" ];
         }))
-    ];
+    ] ++ builtins.attrValues {
+      inherit (pkgs) trunk cargo-leptos cargo-generate cargo-nextest;
+    };
   };
 }

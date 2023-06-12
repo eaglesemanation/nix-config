@@ -2,6 +2,10 @@
 let
   inherit (lib) mkOption types mkEnableOption mkIf;
   cfg = config.bundles.secrets;
+
+  gpgAgentSshEnv = ''
+    SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/gnupg/S.gpg-agent.ssh"
+  '';
 in {
   options = {
     bundles.secrets = {
@@ -52,7 +56,11 @@ in {
       pinentryFlavor = "gnome3";
     };
 
-    programs.ssh = { enable = true; };
+    programs.bash.initExtra = gpgAgentSshEnv;
+    programs.zsh.initExtra = gpgAgentSshEnv;
+    programs.fish.interactiveShellInit = gpgAgentSshEnv;
+
+    programs.ssh.enable = true;
 
     programs.git = {
       enable = true;

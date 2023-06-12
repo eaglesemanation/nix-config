@@ -31,6 +31,9 @@ in {
       # Fixes issues in communication between GnuPG and YubiKey
       programs.gpg.scdaemonSettings.pcsc-driver =
         "/usr/lib64/libpcsclite.so.1.0.0";
+
+      # Use host ssh binary due to GSSAPI config (https://github.com/NixOS/nixpkgs/issues/160527)
+      programs.ssh.enable = lib.mkForce false;
     })
     # Wrap apps requiring OpenGL
     (mkIf cfg.opengl.enable (let
