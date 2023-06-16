@@ -95,8 +95,16 @@ in {
         set-option -sa terminal-overrides ',alacritty:RGB,xterm-256color:RGB'
         # Enable scrollback with mouse
         set -g mouse on
+        # Increase limit of lines for scrollback
+        set -g history-limit 50000
+        # Include title into tab name
+        set-window-option -g window-status-current-format "#I:#W '#T'"
+        set-window-option -g window-status-format "#I:#W '#T'"
+        # Highlight selected tab
+        set-window-option -g window-status-current-style bg=blue
       '';
-      plugins = lib.attrValues { inherit (pkgs.tmuxPlugins) pain-control; };
+      plugins =
+        lib.attrValues { inherit (pkgs.tmuxPlugins) pain-control logging; };
     };
 
     # Shell
@@ -111,6 +119,11 @@ in {
           if [ -n "$found" ]; then
             nix search "nixpkgs#$found"
           fi
+        }
+      '';
+      initExtra = ''
+        precmd() {
+          echo -ne "\033]0;$(print -P '%(4~|%-1~/…/%2~|%3~)')\007"
         }
       '';
     };
