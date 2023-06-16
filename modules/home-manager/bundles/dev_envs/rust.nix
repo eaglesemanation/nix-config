@@ -15,6 +15,7 @@ in {
         }))
     ] ++ builtins.attrValues {
       inherit (pkgs) trunk cargo-leptos cargo-generate cargo-nextest;
+      inherit (pkgs.vscode-extensions.vadimcn) vscode-lldb;
     };
   };
 }
