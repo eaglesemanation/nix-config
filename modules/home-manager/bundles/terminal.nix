@@ -120,6 +120,14 @@ in {
             nix search "nixpkgs#$found"
           fi
         }
+        # [f]ind [p]roject
+        function fp() {
+            proj_path=$(cat "''${XDG_DATA_HOME:-$HOME/.local/share}/nvim/telescope-projects.txt" \
+                | awk -F '=' '$4 == 1 {print $2 "=" $1}' \
+                | sk --delimiter '=' --with-nth 2 \
+                | awk -F '=' '{print $1}')
+            cd "$proj_path"
+        }
       '';
       initExtra = ''
         precmd() {
