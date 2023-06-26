@@ -42,7 +42,7 @@ in {
       [ (nerdfonts.override { fonts = [ cfg.font ]; }) ];
 
     # Terminal emulator
-    programs.alacritty = let font = "${cfg.font} Nerd Font";
+    programs.alacritty = let font = "${cfg.font} NF";
     in {
       enable = true;
       settings = {
