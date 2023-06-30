@@ -63,6 +63,11 @@ in {
         pkg = pkgs.alacritty;
       };
 
+      programs.wezterm.package = nixGLWrap {
+        name = "wezterm";
+        pkg = pkgs.wezterm;
+      };
+
       # Neovide seems to be working without a wrapper, just being extra cautious
       programs.neovide.package = nixGLWrap {
         name = "neovide";

@@ -14,6 +14,9 @@
   # Includes nix path for desktop entries search
   xdg.enable = true;
 
+  # Regenerates list of fonts
+  fonts.fontconfig.enable = true;
+
   programs = {
     # Bootstrap
     home-manager.enable = true;
