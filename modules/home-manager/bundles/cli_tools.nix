@@ -10,11 +10,14 @@ in {
       jq # Parsing JSON in terminal
       tealdeer # tldr, short version of man pages
       xh # httpie analog written in Rust, simple CLI for HTTP requests
+      coreutils # ls, mv, cp etc.
     ];
 
     programs.zsh.shellAliases = {
       http = "xh";
       https = "xh --https";
+      grep = "grep --color=auto";
+      ls = "ls --hyperlink=auto --color=auto";
     };
 
     # Shell prompt
