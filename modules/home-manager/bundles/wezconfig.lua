@@ -63,7 +63,7 @@ wezterm.on("format-tab-title", function(tab, tabs, panes, conf, hover, max_width
         title = pane.title
     end
 
-    return " <" .. (tab.tab_id + 1) .. ": " .. proccess .. "> " .. title .. " "
+    return " <" .. (tab.tab_index + 1) .. ": " .. proccess .. "> " .. title .. " "
 end)
 
 return config
