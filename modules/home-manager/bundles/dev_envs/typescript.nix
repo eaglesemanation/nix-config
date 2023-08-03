@@ -8,7 +8,7 @@ in {
 
   config = mkIf cfg.enable {
     home.packages = builtins.attrValues {
-      inherit (pkgs) deno nodejs;
+      inherit (pkgs) deno nodejs prettierd eslint_d;
       inherit (pkgs.nodePackages) yarn pnpm sass;
     };
   };
