@@ -12,7 +12,7 @@ if wezterm.config_builder then
     config = wezterm.config_builder()
 end
 
-config.font = wezterm.font("Fira Code")
+config.font = wezterm.font("FiraCode Nerd Font")
 config.color_scheme = "Solarized (dark) (terminal.sexy)"
 
 config.use_fancy_tab_bar = false

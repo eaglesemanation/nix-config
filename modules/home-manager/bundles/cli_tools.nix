@@ -27,12 +27,12 @@ in {
       settings = {
         username.show_always = true;
         character = {
-          success_symbol = "[ﬦ](bold green)";
-          error_symbol = "[ﬦ](bold red)";
-          vimcmd_symbol = "[](bold green)";
-          vimcmd_replace_one_symbol = "[](bold purple)";
-          vimcmd_replace_symbol = "[](bold purple)";
-          vimcmd_visual_symbol = "[](bold yellow)";
+          success_symbol = "[󰘧](bold green)";
+          error_symbol = "[󰘧](bold red)";
+          vimcmd_symbol = "[󰏉](bold green)";
+          vimcmd_replace_one_symbol = "[󰏉](bold purple)";
+          vimcmd_replace_symbol = "[󰏉](bold purple)";
+          vimcmd_visual_symbol = "[󰏉](bold yellow)";
         };
         aws.symbol = " ";
         c.symbol = " ";

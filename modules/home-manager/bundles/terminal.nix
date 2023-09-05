@@ -8,7 +8,8 @@ in {
   };
 
   config = mkIf cfg.enable {
-    home.packages = with pkgs; [ fira-code ];
+    home.packages = with pkgs;
+      [ (nerdfonts.override { fonts = [ "FiraCode" ]; }) ];
 
     programs.wezterm = {
       enable = true;
