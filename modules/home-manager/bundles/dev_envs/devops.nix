@@ -8,9 +8,7 @@ in {
   config = mkIf cfg.enable {
     home.packages = builtins.attrValues {
       inherit (pkgs)
-        shellcheck terraform terraform-ls vagrant packer yaml-language-server
-        yamlfmt kubectl kubectx kind clusterctl talosctl fluxcd cmctl
-        kubernetes-helm k9s velero;
+        shellcheck terraform terraform-ls yaml-language-server yamlfmt;
       inherit (pkgs.nodePackages) vscode-langservers-extracted;
     };
   };
