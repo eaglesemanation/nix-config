@@ -33,6 +33,8 @@ in {
       # telescope external dependencies
       ripgrep
       fd
+      # LSP to linters/formatters compatability
+      efm-langserver
     ];
 
     home.sessionVariables = mkIf cfg.setAsEditor { EDITOR = "nvim"; };
