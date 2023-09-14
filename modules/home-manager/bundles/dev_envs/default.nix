@@ -1,13 +1,26 @@
-{ lib, pkgs, config, ... }:
-let
-  inherit (lib)
-    mkOption mkEnableOption mkIf types attrNames filterAttrs removeSuffix;
+{
+  lib,
+  pkgs,
+  config,
+  ...
+}: let
+  inherit
+    (lib)
+    mkOption
+    mkEnableOption
+    mkIf
+    types
+    attrNames
+    filterAttrs
+    removeSuffix
+    ;
   cfg = config.bundles.dev_envs;
 
-  envFilenames = attrNames
+  envFilenames =
+    attrNames
     (filterAttrs (n: v: v == "regular" && n != "default.nix")
       (builtins.readDir ./.));
-  envs = builtins.map (v: removeSuffix ".nix" v) envFilenames;
+  envs = builtins.map (removeSuffix ".nix") envFilenames;
 in {
   options.bundles.dev_envs = {
     enable = mkEnableOption "Tools for software development";
@@ -18,9 +31,8 @@ in {
     };
     disableEnvironments = mkOption {
       type = types.listOf (types.enum envs);
-      description =
-        "List of development environments that need to be disabled (as blacklist)";
-      default = [ ];
+      description = "List of development environments that need to be disabled (as blacklist)";
+      default = [];
     };
   };
 
@@ -31,6 +43,7 @@ in {
       filteredEnvs =
         builtins.filter (e: !(builtins.elem e cfg.disableEnvironments))
         cfg.enableEnvironments;
-    in lib.genAttrs filteredEnvs (_: { enable = true; });
+    in
+      lib.genAttrs filteredEnvs (_: {enable = true;});
   };
 }
