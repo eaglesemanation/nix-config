@@ -1,5 +1,9 @@
-{ lib, pkgs, config, ... }:
-let
+{
+  lib,
+  pkgs,
+  config,
+  ...
+}: let
   inherit (lib) mkEnableOption mkIf;
   cfg = config.bundles.dev_env.typescript;
 in {
@@ -9,7 +13,7 @@ in {
   config = mkIf cfg.enable {
     home.packages = builtins.attrValues {
       inherit (pkgs) nodejs typescript prettierd eslint_d;
-      inherit (pkgs.nodePackages) yarn pnpm sass typescript-language-server;
+      inherit (pkgs.nodePackages) yarn pnpm sass typescript-language-server stylelint;
     };
   };
 }
