@@ -8,7 +8,6 @@ in {
 
   config = mkIf cfg.enable {
     #TODO: rename to nixfmt when stabilized. Tracking: https://github.com/NixOS/nixfmt/issues/153
-    home.packages =
-      builtins.attrValues { inherit (pkgs) nixfmt-rfc-style statix nil; };
+    home.packages = builtins.attrValues { inherit (pkgs) nixfmt statix nil; };
   };
 }

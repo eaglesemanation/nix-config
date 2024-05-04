@@ -85,7 +85,7 @@ in {
           os.symbols = {
             Alpaquita = " ";
             Alpine = " ";
-            AlmaLinux = " ";
+            # AlmaLinux = " ";
             Amazon = " ";
             Android = " ";
             Arch = " ";
@@ -101,7 +101,7 @@ in {
             Gentoo = " ";
             HardenedBSD = "󰞌 ";
             Illumos = "󰈸 ";
-            Kali = " ";
+            # Kali = " ";
             Linux = " ";
             Mabox = " ";
             Macos = " ";
@@ -118,13 +118,13 @@ in {
             Raspbian = " ";
             Redhat = " ";
             RedHatEnterprise = " ";
-            RockyLinux = " ";
+            # RockyLinux = " ";
             Redox = "󰀘 ";
             Solus = "󰠳 ";
             SUSE = " ";
             Ubuntu = " ";
             Unknown = " ";
-            Void = " ";
+            # Void = " ";
             Windows = "󰍲 ";
           };
           package.symbol = "󰏗 ";
