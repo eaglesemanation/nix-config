@@ -1,9 +1,5 @@
-{
-  lib,
-  pkgs,
-  config,
-  ...
-}: let
+{ lib, pkgs, config, ... }:
+let
   inherit (lib) mkEnableOption mkIf;
   cfg = config.bundles.dev_env.nix;
 in {
@@ -11,7 +7,8 @@ in {
     mkEnableOption "Nix development environment";
 
   config = mkIf cfg.enable {
+    #TODO: rename to nixfmt when stabilized. Tracking: https://github.com/NixOS/nixfmt/issues/153
     home.packages =
-      builtins.attrValues {inherit (pkgs) alejandra statix rnix-lsp;};
+      builtins.attrValues { inherit (pkgs) nixfmt-rfc-style statix nil; };
   };
 }

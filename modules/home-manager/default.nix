@@ -1,1 +1,2 @@
-{ ... }: { imports = [ ./bundles ./neovide.nix ]; }
+{ ... }: { imports = [ ./bundles ]; }
+

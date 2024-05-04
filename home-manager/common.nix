@@ -3,7 +3,7 @@
     # Hacks specific for host OS
     ./host_os
     # Cachix integration with home-manager
-    inputs.declarative-cachix.homeManagerModules.declarative-cachix
+    inputs.declarative-cachix.homeManagerModules.declarative-cachix-experimental
     # Provides "bundles"
     outputs.homeManagerModules
   ];
@@ -50,6 +50,8 @@
     name = "nix-community";
     sha256 = "0m6kb0a0m3pr6bbzqz54x37h5ri121sraj1idfmsrr6prknc7q3x";
   }];
+
+  home.packages = builtins.attrValues { inherit (pkgs) cachix; };
 
   # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion
   home.stateVersion = lib.mkDefault "22.05";
