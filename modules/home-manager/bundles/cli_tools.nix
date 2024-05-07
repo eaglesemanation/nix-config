@@ -11,6 +11,7 @@ in {
       tealdeer # tldr, short version of man pages
       xh # httpie analog written in Rust, simple CLI for HTTP requests
       coreutils # ls, mv, cp etc.
+      nh # nix wrapper
     ];
 
     programs = {
