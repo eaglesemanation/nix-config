@@ -35,6 +35,8 @@ in {
       fd
       # LSP to linters/formatters compatability
       efm-langserver
+      # Lang server for markdown links
+      marksman
       # Formatter platform for WASM plugins
       dprint
     ];

@@ -8,7 +8,8 @@ in {
   config = mkIf cfg.enable {
     home.packages = builtins.attrValues {
       inherit (pkgs)
-        shellcheck terraform terraform-ls yaml-language-server yamlfmt;
+        shellcheck terraform terraform-ls yaml-language-server yamlfmt
+        jsonnet-language-server;
       inherit (pkgs.nodePackages) vscode-langservers-extracted;
     };
   };
