@@ -30,8 +30,8 @@ config.keys = {
 
     -- Navigating panes
     { key = "h", mods = "LEADER", action = wezterm.action.ActivatePaneDirection("Left") },
-    { key = "j", mods = "LEADER", action = wezterm.action.ActivatePaneDirection("Up") },
-    { key = "k", mods = "LEADER", action = wezterm.action.ActivatePaneDirection("Down") },
+    { key = "k", mods = "LEADER", action = wezterm.action.ActivatePaneDirection("Up") },
+    { key = "j", mods = "LEADER", action = wezterm.action.ActivatePaneDirection("Down") },
     { key = "l", mods = "LEADER", action = wezterm.action.ActivatePaneDirection("Right") },
     { key = "c", mods = "LEADER", action = wezterm.action.SpawnTab("CurrentPaneDomain") },
 
