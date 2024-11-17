@@ -1,4 +1,11 @@
-{ inputs, lib, config, pkgs, ... }: {
+{
+  inputs,
+  lib,
+  config,
+  pkgs,
+  ...
+}:
+{
   imports = [
     ./common.nix
   ];
@@ -12,7 +19,7 @@
       publicKey = builtins.fetchurl {
         name = "eaglesemanation.gpg";
         url = "https://keys.openpgp.org/vks/v1/by-email/eaglesemanation%40gmail.com";
-        sha256 = "sha256:0dbpdcx8f44jjg7i0ch62bgvqsinxl5f57l9ylfp9959xkbj6b4j";
+        sha256 = "sha256:1xjhfys03j02ggqygpjwnsdclvi5kn624rdn4il23a1q2v2gq1b2";
       };
     };
   };
