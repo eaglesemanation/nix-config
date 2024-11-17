@@ -3,7 +3,7 @@
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-    nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-23.05";
+    nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-24.05";
 
     hardware.url = "github:nixos/nixos-hardware";
 
@@ -50,19 +50,26 @@
       url = "github:oxalica/rust-overlay";
       inputs = {
         nixpkgs.follows = "nixpkgs";
-        flake-utils.follows = "utils";
       };
     };
   };
 
   outputs =
-    { self, nixpkgs, home-manager, utils, pre-commit-hooks, ... }@inputs:
+    {
+      self,
+      nixpkgs,
+      home-manager,
+      utils,
+      pre-commit-hooks,
+      ...
+    }@inputs:
     let
       inherit (self) outputs;
       supportedSystems = builtins.attrValues {
         inherit (utils.lib.system) x86_64-linux aarch64-linux;
       };
-    in rec {
+    in
+    rec {
       overlays = import ./overlay;
 
       nixosModules = import ./modules/nixos;
@@ -72,7 +79,7 @@
         pre-commit-check = pre-commit-hooks.lib.${system}.run {
           src = ./.;
           hooks = {
-            nixfmt.enable = true;
+            nixfmt-rfc-style.enable = true;
             statix.enable = true;
             stylua.enable = true;
           };
@@ -87,14 +94,16 @@
       });
 
       # Additional derivations
-      packages = utils.lib.eachSystemMap supportedSystems
-        (system: import ./pkgs { pkgs = legacyPackages.${system}; });
+      packages = utils.lib.eachSystemMap supportedSystems (
+        system: import ./pkgs { pkgs = legacyPackages.${system}; }
+      );
 
       # Helper functions
       lib = import ./lib { inherit (nixpkgs) lib; };
 
       # This instantiates nixpkgs for each system listed above
-      legacyPackages = utils.lib.eachSystemMap supportedSystems (system:
+      legacyPackages = utils.lib.eachSystemMap supportedSystems (
+        system:
         import inputs.nixpkgs {
           inherit system;
           overlays = builtins.attrValues {
@@ -103,7 +112,8 @@
             rust-overlay = inputs.rust-overlay.overlays.default;
           };
           config.allowUnfree = true;
-        });
+        }
+      );
 
       nixosConfigurations = {
         ## FIXME replace with your hostname
@@ -118,19 +128,20 @@
       };
 
       homeConfigurations = {
-        "eaglesemanation@emnt-x280" =
-          home-manager.lib.homeManagerConfiguration {
-            pkgs = legacyPackages.x86_64-linux;
-            extraSpecialArgs = { inherit inputs outputs; };
-            modules = [ (./home-manager + "/eaglesemanation@emnt-x280.nix") ];
+        "eaglesemanation@emnt-x280" = home-manager.lib.homeManagerConfiguration {
+          pkgs = legacyPackages.x86_64-linux;
+          extraSpecialArgs = {
+            inherit inputs outputs;
           };
-        "eaglesemanation@emnt-desktop" =
-          home-manager.lib.homeManagerConfiguration {
-            pkgs = legacyPackages.x86_64-linux;
-            extraSpecialArgs = { inherit inputs outputs; };
-            modules =
-              [ (./home-manager + "/eaglesemanation@emnt-desktop.nix") ];
+          modules = [ (./home-manager + "/eaglesemanation@emnt-x280.nix") ];
+        };
+        "eaglesemanation@emnt-desktop" = home-manager.lib.homeManagerConfiguration {
+          pkgs = legacyPackages.x86_64-linux;
+          extraSpecialArgs = {
+            inherit inputs outputs;
           };
+          modules = [ (./home-manager + "/eaglesemanation@emnt-desktop.nix") ];
+        };
       };
     };
 }

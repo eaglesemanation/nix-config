@@ -1,8 +1,21 @@
-{ inputs, lib, pkgs, config, ... }:
+{
+  inputs,
+  lib,
+  pkgs,
+  config,
+  ...
+}:
 let
-  inherit (lib) mkOption mkEnableOption mkIf mkMerge types;
+  inherit (lib)
+    mkOption
+    mkEnableOption
+    mkIf
+    mkMerge
+    types
+    ;
   cfg = config.host_os.fedora;
-in {
+in
+{
   options = {
     host_os.fedora = {
       enable = mkEnableOption "Fedora compatability";
@@ -13,10 +26,13 @@ in {
           default = cfg.enable;
         };
         kind = mkOption {
-          type = types.addCheck (types.nullOr (types.enum [ "mesa" "nvidia" ]))
-            (val: cfg.opengl.enable && val != null);
-          description =
-            "Configures which OpenGL implementation to use, 'nvidia' is self explanatory, 'mesa' for Intel and AMD";
+          type = types.addCheck (types.nullOr (
+            types.enum [
+              "mesa"
+              "nvidia"
+            ]
+          )) (val: cfg.opengl.enable && val != null);
+          description = "Configures which OpenGL implementation to use, 'nvidia' is self explanatory, 'mesa' for Intel and AMD";
           default = null;
         };
       };
@@ -27,37 +43,37 @@ in {
     {
       # Enables zsh completions and probably other stuff
       targets.genericLinux.enable = true;
-
-      # Fixes issues in communication between GnuPG and YubiKey
-      programs.gpg.scdaemonSettings.pcsc-driver =
-        "/usr/lib64/libpcsclite.so.1.0.0";
     }
     # Wrap apps requiring OpenGL
-    (mkIf cfg.opengl.enable (let
-      nixGLPrefix = if cfg.opengl.kind == "mesa" then
-        "${pkgs.nixgl.nixGLIntel}/bin/nixGLIntel"
-      else if cfg.opengl.kind == "nvidia" then
-        "${pkgs.nixgl.nixGLNvidia}/bin/nixGLNvidia"
-      else
-        throw ''
+    (mkIf cfg.opengl.enable (
+      let
+        nixGL =
+          if cfg.opengl.kind == "mesa" then
+            pkgs.nixgl.nixGLIntel
+          else if cfg.opengl.kind == "nvidia" then
+            pkgs.nixgl.nixGLNvidia
+          else
+            throw "Unexpected kind for OpenGL overwrite: ${cfg.opengl.manufacturer}";
 
-          Unexpected kind for OpenGL overwrite: ${cfg.opengl.manufacturer}'';
-
-      nixGLWrap = { name, pkg, }:
-        pkgs.symlinkJoin {
-          inherit name;
-          paths = [
-            (pkgs.writeShellScriptBin name ''
-              exec ${nixGLPrefix} ${pkg}/bin/${name} "$@"
-            '')
-            pkg
-          ];
+        nixGLWrap =
+          { name, pkg }:
+          pkgs.symlinkJoin {
+            inherit name;
+            paths = [
+              (pkgs.writeShellScriptBin name ''
+                exec ${lib.getExe nixGL} ${pkg}/bin/${name} "$@"
+              '')
+              pkg
+            ];
+          };
+      in
+      {
+        home.packages = [ nixGL ];
+        programs.wezterm.package = nixGLWrap {
+          name = "wezterm";
+          pkg = pkgs.wezterm;
         };
-    in {
-      programs.wezterm.package = nixGLWrap {
-        name = "wezterm";
-        pkg = pkgs.wezterm;
-      };
-    }))
+      }
+    ))
   ]);
 }

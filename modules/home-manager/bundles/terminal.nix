@@ -1,15 +1,22 @@
-{ lib, pkgs, config, ... }:
+{
+  lib,
+  pkgs,
+  config,
+  ...
+}:
 let
   inherit (lib) mkEnableOption mkIf;
   cfg = config.bundles.terminal;
-in {
+in
+{
   options = {
-    bundles.terminal = { enable = mkEnableOption "Terminal bundle"; };
+    bundles.terminal = {
+      enable = mkEnableOption "Terminal bundle";
+    };
   };
 
   config = mkIf cfg.enable {
-    home.packages = with pkgs;
-      [ (nerdfonts.override { fonts = [ "FiraCode" ]; }) ];
+    home.packages = with pkgs; [ (nerdfonts.override { fonts = [ "Recursive" ]; }) ];
 
     programs.wezterm = {
       enable = true;

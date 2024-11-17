@@ -12,7 +12,10 @@ if wezterm.config_builder then
     config = wezterm.config_builder()
 end
 
-config.font = wezterm.font("FiraCode Nerd Font")
+-- FIx for https://github.com/NixOS/nixpkgs/issues/336069
+config.front_end = "WebGpu"
+
+config.font = wezterm.font("RecMonoLinear Nerd Font")
 config.color_scheme = "Solarized (dark) (terminal.sexy)"
 
 config.use_fancy_tab_bar = false
@@ -30,28 +33,44 @@ config.keys = {
 
     -- Navigating panes
     { key = "h", mods = "LEADER", action = wezterm.action.ActivatePaneDirection("Left") },
-    { key = "k", mods = "LEADER", action = wezterm.action.ActivatePaneDirection("Up") },
     { key = "j", mods = "LEADER", action = wezterm.action.ActivatePaneDirection("Down") },
+    { key = "k", mods = "LEADER", action = wezterm.action.ActivatePaneDirection("Up") },
     { key = "l", mods = "LEADER", action = wezterm.action.ActivatePaneDirection("Right") },
     { key = "c", mods = "LEADER", action = wezterm.action.SpawnTab("CurrentPaneDomain") },
 
     -- Navigating tabs
     { key = "[", mods = "LEADER", action = wezterm.action.ActivateTabRelative(-1) },
+    { key = "{", mods = "LEADER", action = wezterm.action.MoveTabRelative(-1) },
     { key = "]", mods = "LEADER", action = wezterm.action.ActivateTabRelative(1) },
-
-    -- Indexing starting from 1 for easier shortcut access
-    { key = "1", mods = "LEADER", action = wezterm.action.ActivateTab(0) },
-    { key = "2", mods = "LEADER", action = wezterm.action.ActivateTab(1) },
-    { key = "3", mods = "LEADER", action = wezterm.action.ActivateTab(2) },
-    { key = "4", mods = "LEADER", action = wezterm.action.ActivateTab(3) },
-    { key = "5", mods = "LEADER", action = wezterm.action.ActivateTab(4) },
-    { key = "6", mods = "LEADER", action = wezterm.action.ActivateTab(5) },
-    { key = "7", mods = "LEADER", action = wezterm.action.ActivateTab(6) },
-    { key = "8", mods = "LEADER", action = wezterm.action.ActivateTab(7) },
-    { key = "9", mods = "LEADER", action = wezterm.action.ActivateTab(8) },
+    { key = "}", mods = "LEADER", action = wezterm.action.ActivateTabRelative(1) },
 }
 
+for i = 1, 8 do
+    table.insert(config.keys, { key = tostring(i), mods = "LEADER", action = wezterm.action.ActivateTab(i) })
+end
+
 config.default_prog = { "zsh" }
+config.launch_menu = {}
+
+local os_shell = nil
+if string.match(wezterm.target_triple, ".*linux.*") then
+    os_shell = "bash"
+elseif string.match(wezterm.target_triple, ".*darwin.*") then
+    os_shell = "zsh"
+end
+
+if os_shell ~= nil then
+    table.insert(config.launch_menu, {
+        label = "New Tab (No Nix)",
+        args = {
+            os_shell,
+            "-c",
+            -- Looks for any mention of .nix-profile or /nix in PATH and removes it
+            "/usr/bin/env PATH=$(awk -v RS=: -v ORS=: '!/\\/\\.nix-profile|^\\/nix/' <<< \"$PATH\" | sed 's/:$//') "
+                .. os_shell,
+        },
+    })
+end
 
 ---@diagnostic disable-next-line: unused-local
 wezterm.on("format-tab-title", function(tab, tabs, panes, conf, hover, max_width)

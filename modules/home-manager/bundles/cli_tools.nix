@@ -1,13 +1,25 @@
-{ lib, pkgs, config, ... }:
+{
+  lib,
+  pkgs,
+  config,
+  ...
+}:
 let
-  inherit (lib) mkOption types mkEnableOption mkIf;
+  inherit (lib)
+    mkOption
+    types
+    mkEnableOption
+    mkIf
+    ;
   cfg = config.bundles.cli_tools;
-in {
+in
+{
   options.bundles.cli_tools.enable = mkEnableOption "CLI tools bundle";
 
   config = mkIf cfg.enable {
     home.packages = with pkgs; [
       jq # Parsing JSON in terminal
+      yq # Parsing YAML in terminal
       tealdeer # tldr, short version of man pages
       xh # httpie analog written in Rust, simple CLI for HTTP requests
       coreutils # ls, mv, cp etc.
@@ -145,7 +157,6 @@ in {
 
     # Starship changes prompt when entering nix shell, no need for env diff log. This makes direnv silent
     # TODO: Find / implement a fix that makes direnv less verbose rather than silent
-    home.sessionVariables =
-      mkIf config.programs.starship.enable { DIRENV_LOG_FORMAT = ""; };
+    home.sessionVariables = mkIf config.programs.starship.enable { DIRENV_LOG_FORMAT = ""; };
   };
 }
