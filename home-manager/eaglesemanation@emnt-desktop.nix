@@ -1,17 +1,25 @@
-{ inputs, lib, config, pkgs, ... }: {
+{
+  inputs,
+  lib,
+  config,
+  pkgs,
+  ...
+}:
+{
   imports = [ ./common.nix ];
 
   bundles = {
-    dev_envs = { enable = true; };
+    dev_envs = {
+      enable = true;
+    };
     secrets = {
       enable = true;
       name = "Vladimir Romashchenko";
       email = "eaglesemanation@gmail.com";
       publicKey = builtins.fetchurl {
         name = "eaglesemanation.gpg";
-        url =
-          "https://keys.openpgp.org/vks/v1/by-email/eaglesemanation%40gmail.com";
-        sha256 = "sha256:1xjhfys03j02ggqygpjwnsdclvi5kn624rdn4il23a1q2v2gq1b2";
+        url = "https://keys.openpgp.org/vks/v1/by-email/eaglesemanation%40gmail.com";
+        sha256 = "sha256:1kpr9afcazsf5gmzdsg892j7m6gnh9cwlsm1aaxgfshg8s72qbjm";
       };
     };
   };
