@@ -43,6 +43,11 @@ in
     {
       # Enables zsh completions and probably other stuff
       targets.genericLinux.enable = true;
+      # Enables nix in zsh environment
+      programs.zsh.initExtraFirst = ''
+        . /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
+        . ~/.nix-profile/etc/profile.d/hm-session-vars.sh 
+      '';
     }
     # Wrap apps requiring OpenGL
     (mkIf cfg.opengl.enable (

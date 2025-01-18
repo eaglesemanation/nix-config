@@ -1,13 +1,31 @@
-{ lib, pkgs, config, ... }:
+{
+  lib,
+  pkgs,
+  config,
+  ...
+}:
 let
-  inherit (lib) mkEnableOption mkIf;
+  inherit (lib)
+    mkEnableOption
+    mkOption
+    mkMerge
+    mkIf
+    ;
   cfg = config.bundles.dev_env.cpp;
-in {
-  options.bundles.dev_env.cpp.enable =
-    mkEnableOption "C/C++ development environment";
+in
+{
+  options.bundles.dev_env.cpp = {
+    enable = mkEnableOption "C/C++ development environment";
+    embedded = mkOption {
+      default = true;
+      description = "Wheter to enable additional tools for embedded Rust development.";
+      example = false;
+    };
+  };
 
   config = mkIf cfg.enable {
-    home.packages =
-      builtins.attrValues { inherit (pkgs) clang-tools cmake-language-server; };
+    home.packages = mkMerge [
+      (builtins.attrValues { inherit (pkgs) clang-tools cmake-language-server; })
+    ];
   };
 }

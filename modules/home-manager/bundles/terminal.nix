@@ -20,7 +20,9 @@ in
 
     programs.wezterm = {
       enable = true;
-      extraConfig = lib.strings.fileContents ./wezconfig.lua;
+      extraConfig = builtins.replaceStrings [ "/usr/bin/zsh" ] [ "${lib.getExe pkgs.zsh}" ] (
+        lib.strings.fileContents ./wezconfig.lua
+      );
     };
 
     # Shell

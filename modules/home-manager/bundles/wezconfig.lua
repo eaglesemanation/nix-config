@@ -49,7 +49,7 @@ for i = 1, 8 do
     table.insert(config.keys, { key = tostring(i), mods = "LEADER", action = wezterm.action.ActivateTab(i) })
 end
 
-config.default_prog = { "zsh" }
+config.default_prog = { "/usr/bin/zsh" }
 config.launch_menu = {}
 
 local os_shell = nil
