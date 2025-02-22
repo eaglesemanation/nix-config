@@ -1,6 +1,0 @@
-{ pkgs, ... }:
-{
-  imports = [
-    ./fedora.nix
-  ];
-}
