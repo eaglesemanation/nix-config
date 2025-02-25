@@ -15,7 +15,11 @@
         flake-parts.follows = "flake-parts";
       };
     };
-
+    nixgl.url = "github:nix-community/nixGL";
+    nixvim = {
+      url = "github:nix-community/nixvim";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     rust-overlay = {
       url = "github:oxalica/rust-overlay";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -33,14 +37,15 @@
 
   outputs =
     inputs@{
+      self,
       flake-parts,
-      ez-configs,
       nixpkgs,
       ...
     }:
     flake-parts.lib.mkFlake { inherit inputs; } {
-      imports = [
+      imports = with inputs; [
         ez-configs.flakeModule
+        nixvim.flakeModules.default
       ];
       systems = [
         "x86_64-linux"
@@ -48,9 +53,13 @@
         "x86_64-darwin"
         "aarch64-darwin"
       ];
+
       ezConfigs = {
         root = ./.;
-        globalArgs = { inherit inputs; };
+        globalArgs = {
+          inherit inputs;
+          flake = self;
+        };
 
         home.users = {
           eaglesemanation = {
@@ -62,5 +71,31 @@
           };
         };
       };
+
+      nixvim = {
+        packages.enable = true;
+        checks.enable = true;
+      };
+
+      flake = {
+        nixvimModules.default = import ./nixvim { flake = self; };
+      };
+
+      perSystem =
+        { system, ... }:
+        {
+          nixvimConfigurations.nvim = inputs.nixvim.lib.evalNixvim {
+            inherit system;
+            modules = [ self.nixvimModules.default ];
+          };
+
+          nixvimConfigurations.nvim-minimal = inputs.nixvim.lib.evalNixvim {
+            inherit system;
+            modules = [
+              self.nixvimModules.default
+              { emnt.lang_support.langs = [ ]; }
+            ];
+          };
+        };
     };
 }

@@ -1,6 +1,8 @@
-{ ... }:
+{ inputs, ... }:
 {
   imports = [
+    inputs.nixvim.homeManagerModules.nixvim
+
     ./cli_tools.nix
     ./dev_envs
     ./nvim.nix

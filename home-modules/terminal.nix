@@ -16,7 +16,7 @@ in
   };
 
   config = mkIf cfg.enable {
-    home.packages = with pkgs; [ nerd-fonts.recursive-mono ];
+    home.packages = with pkgs; [ nerd-fonts.iosevka ];
 
     programs.wezterm = {
       enable = true;

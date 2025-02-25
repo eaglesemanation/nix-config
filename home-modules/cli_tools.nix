@@ -13,7 +13,7 @@ let
   cfg = config.emnt.cli_tools;
 in
 {
-  options.emnt.cli_tools.enable = mkEnableOption "CLI tools bundle";
+  options.emnt.cli_tools.enable = mkEnableOption "CLI tools setup";
 
   config = mkIf cfg.enable {
     nix = {
