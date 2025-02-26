@@ -62,7 +62,7 @@
 
   keymaps =
     let
-      modeKeys = mode: lib.attrsets.mapAttrsToList (key: action: { inherit key mode action; });
+      inherit (import ./lib.nix { inherit lib; }) modeKeys;
     in
     helpers.keymaps.mkKeymaps { options.silent = true; } (
       modeKeys [ "n" ] {

@@ -2,33 +2,47 @@
   lib,
   config,
   flake,
+  inputs,
+  pkgs,
   ...
 }:
 let
   inherit (lib)
-    mkOption
-    types
     mkEnableOption
     mkIf
     ;
   cfg = config.emnt.nvim;
+
+  aliases = {
+    vi = "nvim";
+    vim = "nvim";
+    vimdiff = "nvim -d";
+  };
 in
 {
   options = {
-    emnt.nvim = {
-      enable = mkEnableOption "Neovim setup";
-      setAsEditor = mkOption {
-        type = types.bool;
-        default = true;
-        description = ''Sets EDITOR="nvim"'';
-      };
-    };
+    emnt.nvim.enable = mkEnableOption "Neovim setup";
   };
 
   config = mkIf cfg.enable {
-    programs.nixvim = {
-      enable = true;
-      imports = [ (import ../nixvim { inherit flake; }) ];
+    home.packages = [
+      (inputs.nixvim.legacyPackages."${pkgs.stdenv.hostPlatform.system}".makeNixvimWithModule {
+        module = ../nixvim;
+        extraSpecialArgs = {
+          inherit flake;
+          hmConfig = config;
+        };
+      })
+    ];
+
+    home.sessionVariables = {
+      EDITOR = "nvim";
+    };
+
+    programs = {
+      bash.shellAliases = aliases;
+      fish.shellAliases = aliases;
+      zsh.shellAliases = aliases;
     };
   };
 }

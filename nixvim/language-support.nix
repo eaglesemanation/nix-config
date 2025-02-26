@@ -1,5 +1,6 @@
 {
   lib,
+  helpers,
   ...
 }:
 let
@@ -79,5 +80,32 @@ in
       # Running unit tests
       neotest.enable = true;
     };
+
+    keymaps =
+      let
+        inherit (import ./lib.nix { inherit lib; }) modeKeys;
+      in
+      helpers.keymaps.mkKeymaps { options.silent = true; } (
+        modeKeys [ "n" ] {
+          "<leader>sd" = "<cmd>Telescope lsp_definitions<cr>";
+          "<leader>sD" = "<cmd>Telescope lsp_references<cr>";
+          "<leader>si" = "<cmd>Telescope lsp_implementations<cr>";
+          "<leader>st" = "<cmd>Telescope lsp_type_definitions<cr>";
+
+          "<leader>se" = "<cmd>lua vim.diagnostic.open_float()<cr>";
+          "<leader>sf" = "<cmd>lua require('conform').format()<cr>";
+          "<leader>sF" = "<cmd>let b:disable_autoformat = 1<cr>";
+          "<leader>sh" = "<cmd>lua vim.lsp.buf.hover()<cr>";
+          "<leader>sr" = "<cmd>lua vim.lsp.buf.rename()<cr>";
+          "<leader>sa" = "<cmd>lua vim.lsp.buf.code_action()<cr>";
+
+          "<leader>tt" = "<cmd>Neotest run<cr>";
+          "<leader>td" = "<cmd>lua require('neotest').run.run({ strategy = 'dap' })<cr>";
+          "<leader>tf" = "<cmd>Neotest run file<cr>";
+          "<leader>tT" = "<cmd>lua require('neotest').run.run(vim.fn.getcwd())<cr>";
+          "<leader>ts" = "<cmd>Neotest stop<cr>";
+          "<leader>tu" = "<cmd>Neotest summary<cr><cmd>Neotest output-panel<cr>";
+        }
+      );
   };
 }

@@ -78,7 +78,7 @@
       };
 
       flake = {
-        nixvimModules.default = import ./nixvim { flake = self; };
+        nixvimModules.default = import ./nixvim;
       };
 
       perSystem =
@@ -87,6 +87,9 @@
           nixvimConfigurations.nvim = inputs.nixvim.lib.evalNixvim {
             inherit system;
             modules = [ self.nixvimModules.default ];
+            extraSpecialArgs = {
+              flake = self;
+            };
           };
 
           nixvimConfigurations.nvim-minimal = inputs.nixvim.lib.evalNixvim {
@@ -95,6 +98,9 @@
               self.nixvimModules.default
               { emnt.lang_support.langs = [ ]; }
             ];
+            extraSpecialArgs = {
+              flake = self;
+            };
           };
         };
     };

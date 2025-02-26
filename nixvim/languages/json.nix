@@ -7,15 +7,15 @@ let
   inherit (import ../lib.nix { inherit lib; }) mkIfLang;
 in
 {
-  config = mkIfLang config.emnt.lang_support "go" {
+  config = mkIfLang config.emnt.lang_support "json" {
     plugins = {
-      lsp.servers.gopls = {
+      schemastore = {
+        enable = true;
+        json.enable = true;
+      };
+      lsp.servers.jsonls = {
         enable = true;
       };
-      neotest.adapters.golang = {
-        enable = true;
-      };
-      dap-go.enable = true;
     };
   };
 }

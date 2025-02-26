@@ -1,4 +1,3 @@
-{ flake, ... }:
 {
   imports = [
     ./options.nix
@@ -6,7 +5,11 @@
     ./autocompletion.nix
     ./gui.nix
   ];
-  _module.args.flake = flake;
+
+  # I'm aiming to make this config fully lua based
+  # No need for other providers
+  withRuby = false;
+  withPython3 = false;
 
   # Enable performance optimizations
   luaLoader.enable = true;

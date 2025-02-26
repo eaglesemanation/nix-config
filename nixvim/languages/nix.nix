@@ -6,16 +6,15 @@
   ...
 }:
 let
-  inherit (lib) mkIf subtractLists;
-  cfg = config.emnt.lang_support;
-  langIncluded = builtins.elem "nix" (subtractLists cfg.blacklist cfg.langs);
+  inherit (import ../lib.nix { inherit lib; }) mkIfLang;
 in
 {
-  config = mkIf langIncluded {
+  config = mkIfLang config.emnt.lang_support "nix" {
     plugins = {
       lsp.servers.nixd = {
         enable = true;
         settings = {
+          offset_encoding = "utf-8";
           formatting.command = [ (lib.getExe pkgs.nixfmt-rfc-style) ];
           options =
             let
