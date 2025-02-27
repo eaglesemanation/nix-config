@@ -3,10 +3,14 @@
   lib,
   pkgs,
   config,
+  inputs,
+  hmConfig ? null,
   ...
 }:
 let
+  inherit (lib) mkIf;
   inherit (import ../lib.nix { inherit lib; }) mkIfLang;
+  getFlake = ''(builtins.getFlake "${flake}")'';
 in
 {
   config = mkIfLang config.emnt.lang_support "nix" {
@@ -16,14 +20,13 @@ in
         settings = {
           offset_encoding = "utf-8";
           formatting.command = [ (lib.getExe pkgs.nixfmt-rfc-style) ];
-          options =
-            let
-              getFlake = ''(builtins.getFlake "${flake}")'';
-            in
-            {
-              home-manager.expr = ''${getFlake}.homeConfigurations."eaglesemanation".options'';
-              hixvim.expr = ''${getFlake}.packages.${pkgs.system}.nvim.options'';
-            };
+          nixpkgs.expr = ''import "${inputs.nixpkgs.outPath}" { }'';
+          options = {
+            home-manager.expr = mkIf (
+              hmConfig != null
+            ) ''${getFlake}.homeConfigurations.${hmConfig.home.username}.options'';
+            hixvim.expr = ''${getFlake}.packages.${pkgs.system}.nvim.options'';
+          };
         };
       };
     };

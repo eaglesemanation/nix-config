@@ -1,4 +1,4 @@
-{ inputs, ... }:
+{ inputs, lib, ... }:
 {
   imports = [
     inputs.nixvim.homeManagerModules.nixvim
@@ -11,8 +11,8 @@
   ];
 
   emnt = {
-    terminal.enable = true;
-    nvim.enable = true;
-    cli_tools.enable = true;
+    terminal.enable = lib.mkDefault true;
+    nvim.enable = lib.mkDefault true;
+    cli_tools.enable = lib.mkDefault true;
   };
 }

@@ -61,12 +61,15 @@
       modeKeys [ "n" ] {
         "<leader>ff" = "<cmd>Telescope find_files hidden=true<cr>";
         "<leader>fg" = "<cmd>Telescope live_grep<cr>";
-        "<leader>fb" = "<cmd>Telescope file_browser<cr>";
+        "<leader>fb" = "<cmd>Telescope file_browser cwd=%:p:h<cr>";
         "<leader>fs" = {
           action = "<cmd>Telescope aerial<cr>";
           options.desc = "Search for symbols";
         };
         "<leader>fd" = "<cmd>Telescope diagnostics<cr>";
+
+        "<leader>gg" = "<cmd>Neogit<cr>";
+        "<leader>gb" = "<cmd>Neogit branch<cr>";
       }
     );
 }

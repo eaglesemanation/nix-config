@@ -88,6 +88,7 @@
             inherit system;
             modules = [ self.nixvimModules.default ];
             extraSpecialArgs = {
+              inherit inputs;
               flake = self;
             };
           };
@@ -99,6 +100,7 @@
               { emnt.lang_support.langs = [ ]; }
             ];
             extraSpecialArgs = {
+              inherit inputs;
               flake = self;
             };
           };

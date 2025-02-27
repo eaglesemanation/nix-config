@@ -9,7 +9,9 @@
 let
   inherit (lib)
     mkEnableOption
+    mkOption
     mkIf
+    types
     ;
   cfg = config.emnt.nvim;
 
@@ -21,15 +23,21 @@ let
 in
 {
   options = {
-    emnt.nvim.enable = mkEnableOption "Neovim setup";
+    emnt.nvim = {
+      enable = mkEnableOption "Install neovim using nixvim module";
+      module = mkOption {
+        type = types.deferredModule;
+        default = flake.nixvimModules.default;
+      };
+    };
   };
 
   config = mkIf cfg.enable {
     home.packages = [
       (inputs.nixvim.legacyPackages."${pkgs.stdenv.hostPlatform.system}".makeNixvimWithModule {
-        module = ../nixvim;
+        inherit (cfg) module;
         extraSpecialArgs = {
-          inherit flake;
+          inherit flake inputs;
           hmConfig = config;
         };
       })
