@@ -14,12 +14,6 @@ let
     types
     ;
   cfg = config.emnt.nvim;
-
-  aliases = {
-    vi = "nvim";
-    vim = "nvim";
-    vimdiff = "nvim -d";
-  };
 in
 {
   options = {
@@ -47,10 +41,10 @@ in
       EDITOR = "nvim";
     };
 
-    programs = {
-      bash.shellAliases = aliases;
-      fish.shellAliases = aliases;
-      zsh.shellAliases = aliases;
+    home.shellAliases = {
+      vi = "nvim";
+      vim = "nvim";
+      vimdiff = "nvim -d";
     };
   };
 }

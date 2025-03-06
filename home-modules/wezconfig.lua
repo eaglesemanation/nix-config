@@ -20,7 +20,6 @@ config.color_scheme = "Solarized (dark) (terminal.sexy)"
 config.use_fancy_tab_bar = false
 config.tab_bar_at_bottom = true
 config.tab_max_width = 64
-config.window_decorations = "INTEGRATED_BUTTONS|RESIZE"
 config.window_padding = { left = 0, right = 0, top = 0, bottom = 0 }
 
 config.leader = { key = "a", mods = "CTRL", timeout_milliseconds = 1000 }
