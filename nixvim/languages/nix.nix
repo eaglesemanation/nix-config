@@ -3,7 +3,6 @@
   lib,
   pkgs,
   config,
-  inputs,
   hmConfig ? null,
   ...
 }:
@@ -20,12 +19,12 @@ in
         settings = {
           offset_encoding = "utf-8";
           formatting.command = [ (lib.getExe pkgs.nixfmt-rfc-style) ];
-          nixpkgs.expr = ''import "${inputs.nixpkgs.outPath}" { }'';
+          nixpkgs.expr = "import ${flake}.inputs.nixpkgs { }";
           options = {
             home-manager.expr = mkIf (
               hmConfig != null
-            ) ''${getFlake}.homeConfigurations.${hmConfig.home.username}.options'';
-            hixvim.expr = ''${getFlake}.packages.${pkgs.system}.nvim.options'';
+            ) "${getFlake}.homeConfigurations.${hmConfig.home.username}.options";
+            hixvim.expr = "${getFlake}.packages.${pkgs.system}.nvim.options";
           };
         };
       };
