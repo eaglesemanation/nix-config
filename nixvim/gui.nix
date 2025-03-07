@@ -49,6 +49,11 @@
         };
       };
     };
+    # Bookmarks git folders as projects
+    project-nvim = {
+      enable = true;
+      enableTelescope = true;
+    };
 
     which-key.enable = true;
   };
@@ -67,6 +72,7 @@
           options.desc = "Search for symbols";
         };
         "<leader>fd" = "<cmd>Telescope diagnostics<cr>";
+        "<leader>fp" = "<cmd>Telescope projects<cr>";
 
         "<leader>gg" = "<cmd>Neogit<cr>";
         "<leader>gb" = "<cmd>Neogit branch<cr>";

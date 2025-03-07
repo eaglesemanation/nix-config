@@ -11,7 +11,7 @@ in
   config = mkIfLang config.emnt.lang_support "sql" {
     plugins = {
       lsp.servers = {
-        sqlls.enable = true;
+        sqls.enable = true;
       };
       conform-nvim.settings = {
         formatters_by_ft = {

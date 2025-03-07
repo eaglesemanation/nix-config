@@ -52,6 +52,8 @@ in
 
       # Language specific functionality in a server
       lsp.enable = true;
+      # Import project specific LSP config from .vscode/settings.json
+      neoconf.enable = true;
       # Formatters integration
       conform-nvim = {
         enable = true;
@@ -71,6 +73,7 @@ in
 
       # Execute project specific tasks
       overseer.enable = true;
+      compiler.enable = true;
 
       # Attaching a debugger to a process
       dap-ui.enable = true;
