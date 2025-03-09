@@ -4,7 +4,6 @@
   home.stateVersion = lib.mkDefault "22.05";
 
   emnt = {
-    dev_envs.enable = true;
     secrets = {
       enable = true;
       name = "Vladimir Romashchenko";

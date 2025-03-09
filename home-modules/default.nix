@@ -4,7 +4,7 @@
     inputs.nixvim.homeManagerModules.nixvim
 
     ./cli_tools.nix
-    ./dev_envs
+    ./language-support.nix
     ./nvim.nix
     ./secrets.nix
     ./terminal.nix

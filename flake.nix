@@ -97,7 +97,7 @@
             inherit system;
             modules = [
               self.nixvimModules.default
-              { emnt.lang_support.langs = [ ]; }
+              { emnt.lang_support.enable = [ ]; }
             ];
             extraSpecialArgs = {
               inherit inputs;

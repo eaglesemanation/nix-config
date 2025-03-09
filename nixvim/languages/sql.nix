@@ -4,22 +4,17 @@
   pkgs,
   ...
 }:
-let
-  inherit (import ../lib.nix { inherit lib; }) mkIfLang;
-in
-{
-  config = mkIfLang config.emnt.lang_support "sql" {
-    plugins = {
-      lsp.servers = {
-        sqls.enable = true;
+lib.mkIf (builtins.elem "sql" config.emnt.lang_support.langs) {
+  plugins = {
+    lsp.servers = {
+      sqls.enable = true;
+    };
+    conform-nvim.settings = {
+      formatters_by_ft = {
+        sql = [ "sqlfluff" ];
       };
-      conform-nvim.settings = {
-        formatters_by_ft = {
-          sql = [ "sqlfluff" ];
-        };
-        formatters = {
-          sqlfluff = lib.getExe pkgs.sqlfluff;
-        };
+      formatters = {
+        sqlfluff = lib.getExe pkgs.sqlfluff;
       };
     };
   };
