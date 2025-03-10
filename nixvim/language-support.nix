@@ -51,29 +51,37 @@ in
 
   config = {
     warnings = lib.nixvim.mkWarnings "emnt.lang_support" [
-      (let
-        nixvimUniqueLangs = lib.subtractLists inputs.hmConfig.emnt.lang_support.definedLangs definedLangs;
-      in {
-        when = cfg.homeManagerSupport && builtins.length nixvimUniqueLangs != 0;
-        message = "nixvim defines those languages, but home-manager doesn't: [${builtins.toString nixvimUniqueLangs}]";
-      })
-      (let
-        homemanagerUniqueLangs = lib.subtractLists definedLangs inputs.hmConfig.emnt.lang_support.definedLangs;
-      in {
-        when = cfg.homeManagerSupport && builtins.length homemanagerUniqueLangs != 0;
-        message = "home-manager defines those languages, but nixvim doesn't: [${builtins.toString homemanagerUniqueLangs}]";
-      })
+      (
+        let
+          nixvimUniqueLangs = lib.subtractLists inputs.hmConfig.emnt.lang_support.definedLangs definedLangs;
+        in
+        {
+          when = cfg.homeManagerSupport && builtins.length nixvimUniqueLangs != 0;
+          message = "nixvim defines those languages, but home-manager doesn't: [${builtins.toString nixvimUniqueLangs}]";
+        }
+      )
+      (
+        let
+          homemanagerUniqueLangs = lib.subtractLists definedLangs inputs.hmConfig.emnt.lang_support.definedLangs;
+        in
+        {
+          when = cfg.homeManagerSupport && builtins.length homemanagerUniqueLangs != 0;
+          message = "home-manager defines those languages, but nixvim doesn't: [${builtins.toString homemanagerUniqueLangs}]";
+        }
+      )
     ];
 
     emnt.lang_support = mkMerge [
-      (mkIf cfg.homeManagerSupport (let
-        inherit (inputs.hmConfig.emnt.lang_support) enable disable;
-      in {
-        enable = mkDefault (lib.intersectLists definedLangs enable);
-        disable = mkDefault (lib.intersectLists definedLangs disable);
-      }
+      (mkIf cfg.homeManagerSupport (
+        let
+          inherit (inputs.hmConfig.emnt.lang_support) enable disable;
+        in
+        {
+          enable = mkDefault (lib.intersectLists definedLangs enable);
+          disable = mkDefault (lib.intersectLists definedLangs disable);
+        }
       ))
-      { langs = lib.subtractLists cfg.disable cfg.enable; } 
+      { langs = lib.subtractLists cfg.disable cfg.enable; }
     ];
 
     plugins = {
@@ -149,6 +157,18 @@ in
           "<leader>tT" = "<cmd>lua require('neotest').run.run(vim.fn.getcwd())<cr>";
           "<leader>ts" = "<cmd>Neotest stop<cr>";
           "<leader>tu" = "<cmd>Neotest summary<cr><cmd>Neotest output-panel<cr>";
+
+          "<leader>dc" = "<cmd>DapContinue<cr>";
+          "<leader>db" = "<cmd>DapToggleBreakpoint<cr>";
+          "<leader>dB" = {
+            action = "<cmd>lua require('dap').set_breakpoint(vim.fn.input('Enter breakpoint condition: '))<cr>";
+            options.desc = "Set a conditional breakpoint";
+          };
+          "<leader>du" = "<cmd>lua require('dapui').toggle()<cr>";
+          "<leader>ds" = "<cmd>DapStepOver<cr>";
+          "<leader>di" = "<cmd>DapStepInto<cr>";
+          "<leader>do" = "<cmd>DapStepOut<cr>";
+          "<leader>dt" = "<cmd>DapTerminate<cr>";
         }
       );
   };
