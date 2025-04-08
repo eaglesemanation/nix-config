@@ -66,6 +66,7 @@
     in
     helpers.keymaps.mkKeymaps { options.silent = true; } (
       modeKeys [ "n" ] {
+        # Window operations
         "<leader>h" = "<cmd>wincmd h<cr>";
         "<leader>j" = "<cmd>wincmd j<cr>";
         "<leader>k" = "<cmd>wincmd k<cr>";
@@ -76,6 +77,12 @@
         "<leader>L" = "<cmd>wincmd L<cr>";
         "<leader>-" = "<cmd>split<cr>";
         "<leader>|" = "<cmd>vsplit<cr>";
+        # Tab operations
+        "<leader>tc" = "<cmd>tabclose<cr>";
+        "<leader>tl" = "<cmd>tabnext<cr>";
+        "<leader>th" = "<cmd>tabprevious<cr>";
+        "<leader>tL" = "<cmd>tabmove +1<cr>";
+        "<leader>tH" = "<cmd>tabmove -1<cr>";
         # Recenter after moving half a page
         "<C-d>" = "<C-d>zz";
         "<C-u>" = "<C-u>zz";

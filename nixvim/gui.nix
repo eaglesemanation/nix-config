@@ -28,6 +28,7 @@
       enable = true;
       settings.integrations.telescope = true;
     };
+    diffview.enable = true;
 
     rainbow-delimiters.enable = true;
     web-devicons.enable = true;
@@ -76,6 +77,7 @@
 
         "<leader>gg" = "<cmd>Neogit<cr>";
         "<leader>gb" = "<cmd>Neogit branch<cr>";
+        "<leader>gd" = "<cmd>DiffviewOpen<cr>";
       }
     );
 }

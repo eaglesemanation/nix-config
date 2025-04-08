@@ -27,6 +27,7 @@
         "everforest"
         "overseer.nvim"
         "conform.nvim"
+        "typst-preview.nvim"
       ];
     };
   };
