@@ -12,14 +12,10 @@ if wezterm.config_builder then
 	config = wezterm.config_builder()
 end
 
-config.enable_wayland = false
-
+config.window_decorations = "NONE"
+config.integrated_title_button_style = "Gnome"
 config.font = wezterm.font("Iosevka Nerd Font")
-config.color_scheme = "Solarized (dark) (terminal.sexy)"
-
-config.use_fancy_tab_bar = false
-config.tab_bar_at_bottom = true
-config.tab_max_width = 64
+config.color_scheme = "Everforest Dark (Gogh)"
 config.window_padding = { left = 0, right = 0, top = 0, bottom = 0 }
 
 config.leader = { key = "a", mods = "CTRL", timeout_milliseconds = 1000 }
