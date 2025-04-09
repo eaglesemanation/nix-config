@@ -12,7 +12,6 @@ if wezterm.config_builder then
 	config = wezterm.config_builder()
 end
 
-config.window_decorations = "NONE"
 config.integrated_title_button_style = "Gnome"
 config.font = wezterm.font("Iosevka Nerd Font")
 config.color_scheme = "Everforest Dark (Gogh)"
@@ -51,8 +50,10 @@ config.launch_menu = {}
 local os_shell = nil
 if string.match(wezterm.target_triple, ".*linux.*") then
 	os_shell = "bash"
+	config.window_decorations = "NONE"
 elseif string.match(wezterm.target_triple, ".*darwin.*") then
 	os_shell = "zsh"
+	config.window_decorations = "INTEGRATED_BUTTONS|RESIZE"
 end
 
 if os_shell ~= nil then
