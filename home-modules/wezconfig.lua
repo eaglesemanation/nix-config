@@ -12,10 +12,8 @@ if wezterm.config_builder then
 	config = wezterm.config_builder()
 end
 
-config.integrated_title_button_style = "Gnome"
 config.font = wezterm.font("Iosevka Nerd Font")
 config.color_scheme = "Everforest Dark (Gogh)"
-config.window_padding = { left = 0, right = 0, top = 0, bottom = 0 }
 
 config.leader = { key = "a", mods = "CTRL", timeout_milliseconds = 1000 }
 config.keys = {
@@ -51,9 +49,12 @@ local os_shell = nil
 if string.match(wezterm.target_triple, ".*linux.*") then
 	os_shell = "bash"
 	config.window_decorations = "NONE"
+	config.integrated_title_button_style = "Gnome"
+	config.window_padding = { left = 0, right = 0, top = 0, bottom = 0 }
 elseif string.match(wezterm.target_triple, ".*darwin.*") then
 	os_shell = "zsh"
 	config.window_decorations = "INTEGRATED_BUTTONS|RESIZE"
+	config.window_padding = { left = 0, right = 0, top = 10, bottom = 10 }
 end
 
 if os_shell ~= nil then

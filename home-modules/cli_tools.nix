@@ -66,6 +66,7 @@ in
           rebase.updateRefs = true;
         };
       };
+      mergiraf.enable = true;
 
       zsh = {
         shellAliases = {
