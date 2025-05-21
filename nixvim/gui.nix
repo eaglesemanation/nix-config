@@ -65,7 +65,7 @@
     in
     helpers.keymaps.mkKeymaps { options.silent = true; } (
       modeKeys [ "n" ] {
-        "<leader>ff" = "<cmd>Telescope find_files hidden=true<cr>";
+        "<leader>ff" = "<cmd>Telescope find_files hidden=true find_command=fd,--type,f,--color,never<cr>";
         "<leader>fg" = "<cmd>Telescope live_grep<cr>";
         "<leader>fb" = "<cmd>Telescope file_browser cwd=%:p:h<cr>";
         "<leader>fs" = {

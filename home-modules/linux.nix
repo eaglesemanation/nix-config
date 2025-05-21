@@ -1,9 +1,9 @@
 # Automatically imported by ez-configs if targets linux device
-{ inputs, ... }:
+{ inputs, lib, ... }:
 {
   targets.genericLinux.enable = true;
   # Enables nix in zsh environment
-  programs.zsh.initExtraFirst = ''
+  programs.zsh.initContent = lib.mkBefore ''
     . /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
     . ~/.nix-profile/etc/profile.d/hm-session-vars.sh 
   '';

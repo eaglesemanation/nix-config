@@ -79,6 +79,12 @@ in
 
       # Fuzzy search, integrates with zsh
       skim.enable = true;
+      fd = {
+        enable = true;
+        ignores = [
+          ".git/"
+        ];
+      };
 
       # Shell prompt
       starship = {

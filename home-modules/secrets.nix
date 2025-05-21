@@ -48,12 +48,12 @@ in
       defaultCacheTtl = 1800;
       enableSshSupport = true;
       enableScDaemon = true;
-      pinentryPackage = pkgs.pinentry-gnome3;
+      pinentry.package = pkgs.pinentry-gnome3;
     };
 
     programs = {
       bash.initExtra = gpgAgentSshEnv;
-      zsh.initExtra = gpgAgentSshEnv;
+      zsh.initContent = gpgAgentSshEnv;
       fish.interactiveShellInit = gpgAgentSshEnv;
 
       ssh.enable = true;

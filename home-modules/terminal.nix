@@ -32,7 +32,7 @@ in
       enableCompletion = true;
       dotDir = ".config/zsh";
       history.path = "${config.xdg.dataHome}/zsh/zsh_history";
-      initExtra = ''
+      initContent = ''
         # Set window title to current path
         precmd() {
           echo -ne "\033]0;$(print -P '%(4~|%-1~/…/%2~|%3~)')\007"
