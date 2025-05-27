@@ -57,6 +57,7 @@ in
       git = {
         enable = true;
         lfs.enable = true;
+        difftastic.enable = true;
         extraConfig = {
           rerere.enabled = true;
           column.ui = "auto";
@@ -66,16 +67,15 @@ in
           rebase.updateRefs = true;
         };
       };
-      mergiraf.enable = true;
-
-      zsh = {
-        shellAliases = {
-          http = "xh";
-          https = "xh --https";
-          grep = "grep --color=auto";
-          ls = "ls --hyperlink=auto --color=auto";
+      jujutsu = {
+        enable = true;
+        settings = {
+          ui = {
+            merge-editor = "mergiraf";
+          };
         };
       };
+      mergiraf.enable = true;
 
       # Fuzzy search, integrates with zsh
       skim.enable = true;
@@ -89,7 +89,6 @@ in
       # Shell prompt
       starship = {
         enable = true;
-        enableZshIntegration = true;
         settings = {
           username.show_always = true;
           character = {

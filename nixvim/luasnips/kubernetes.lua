@@ -301,9 +301,10 @@ return {
                 kind: HelmRelease
                 metadata:
                   name: <name>
-                  namespace: <namespace>
+                  namespace: flux-system
                 spec:
                   interval: 30m
+                  targetNamespace: <namespace>
                   chart:
                     spec:
                       chart: <chart>
@@ -340,7 +341,7 @@ return {
                 kind: HelmRepository
                 metadata:
                   name: <name>
-                  namespace: <namespace>
+                  namespace: flux-system
                 spec:
                   interval: 30m
                   url: <url>
@@ -348,8 +349,7 @@ return {
             ]],
 			{
 				name = i(1),
-				namespace = i(2, "flux-system"),
-				url = i(3),
+				url = i(2),
 			}
 		)
 	),

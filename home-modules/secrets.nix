@@ -14,7 +14,7 @@ let
   cfg = config.emnt.secrets;
 
   gpgAgentSshEnv = ''
-    SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/gnupg/S.gpg-agent.ssh"
+    set SSH_AUTH_SOCK "$XDG_RUNTIME_DIR/gnupg/S.gpg-agent.ssh"
   '';
 in
 {
@@ -58,17 +58,15 @@ in
 
       ssh.enable = true;
       git = {
-        enable = true;
         userName = cfg.name;
         userEmail = cfg.email;
         signing = {
           key = null; # Decide which key to use automatically
           signByDefault = true;
         };
-        extraConfig = {
-          pull.rebase = false;
-          init.defaultBranch = "main";
-        };
+      };
+      jujutsu.settings.user = {
+        inherit (cfg) name email;
       };
 
       gpg = {
