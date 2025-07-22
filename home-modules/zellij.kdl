@@ -1,0 +1,147 @@
+theme "everforest-dark"
+default_shell "@fish@"
+show_startup_tips false
+pane_viewport_serialization true
+scrollback_lines_to_serialize 10000
+
+plugins {
+  vim-zellij-navigator location="file:@vim-zellij-navigator@" { }
+}
+
+keybinds {
+    locked {
+        unbind "Ctrl g"
+        bind "Alt g" { SwitchToMode "Normal"; }
+    }
+
+    resize {
+        unbind "Ctrl n"
+        bind "Alt n" { SwitchToMode "Normal"; }
+    }
+    shared_except "resize" "locked" {
+        unbind "Ctrl n"
+        bind "Alt r" { SwitchToMode "Resize"; }
+    }
+
+    pane {
+        unbind "Ctrl p"
+        bind "Alt p" { SwitchToMode "Normal"; }
+    }
+    shared_except "pane" "locked" {
+        unbind "Ctrl p"
+        bind "Alt p" { SwitchToMode "Pane"; }
+    }
+
+    move {
+        unbind "Ctrl h"
+        bind "Alt h" { SwitchToMode "Normal"; }
+    }
+    shared_except "move" "locked" {
+        unbind "Ctrl h"
+        bind "Alt h" { SwitchToMode "Move"; }
+    }
+
+    tab {
+        unbind "Ctrl t"
+        bind "Alt t" { SwitchToMode "Normal"; }
+    }
+    shared_except "tab" "locked" {
+        unbind "Ctrl t"
+        bind "Alt t" { SwitchToMode "Tab"; }
+    }
+
+    scroll {
+        unbind "Ctrl s"
+        bind "Alt s" { SwitchToMode "Normal"; }
+        // PageScrollDown
+        unbind "Ctrl f"
+        // PageScrollUp
+        unbind "Ctrl b"
+    }
+    shared_except "scroll" "locked" {
+        unbind "Ctrl s"
+        bind "Alt s" { SwitchToMode "Scroll"; }
+    }
+
+    session {
+        unbind "Ctrl o"
+        bind "Alt o" { SwitchToMode "Normal"; }
+        unbind "Ctrl s"
+        bind "Alt s" { SwitchToMode "Scroll"; }
+    }
+    shared_except "session" "locked" {
+        unbind "Ctrl o"
+        bind "Alt o" { SwitchToMode "Session"; }
+    }
+
+    search {
+        unbind "Ctrl s"
+        bind "Alt s" { SwitchToMode "Normal"; }
+        unbind "Ctrl f"
+        unbind "Ctrl b"
+    }
+
+    shared_except "tmux" "locked" {
+        bind "Ctrl b" { SwitchToMode "Tmux"; }
+    }
+
+    shared_except "locked" {
+        unbind "Ctrl q"
+        unbind "Ctrl g"
+        bind "Alt g" { SwitchToMode "Locked"; }
+        unbind "Alt ="
+        unbind "Alt +"
+        unbind "Alt -"
+        bind "Alt -" { NewPane "Down"; }
+        bind "Alt \\" { NewPane "Right"; }
+
+        bind "Ctrl h" {
+            MessagePlugin "vim-zellij-navigator" {
+                name "move_focus"
+                payload "left"
+            }
+        }
+        bind "Ctrl j" {
+            MessagePlugin "vim-zellij-navigator" {
+                name "move_focus"
+                payload "down"
+            }
+        }
+        bind "Ctrl k" {
+            MessagePlugin "vim-zellij-navigator" {
+                name "move_focus"
+                payload "up"
+            }
+        }
+        bind "Ctrl l" {
+            MessagePlugin "vim-zellij-navigator" {
+                name "move_focus"
+                payload "right"
+            }
+        }
+        bind "Alt h" {
+            MessagePlugin "vim-zellij-navigator" {
+                name "resize"
+                payload "left"
+            }
+        }
+        bind "Alt j" {
+            MessagePlugin "vim-zellij-navigator" {
+                name "resize"
+                payload "down"
+            }
+        }
+        bind "Alt k" {
+            MessagePlugin "vim-zellij-navigator" {
+                name "resize"
+                payload "up"
+            }
+        }
+        bind "Alt l" {
+            MessagePlugin "vim-zellij-navigator" {
+                name "resize"
+                payload "right"
+            }
+        }
+    }
+}

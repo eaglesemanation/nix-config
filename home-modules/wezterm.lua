@@ -2,13 +2,6 @@ local wezterm = require("wezterm")
 local act = wezterm.action
 local config = {}
 
--- Equivalent to POSIX basename(3)
--- Given "/foo/bar" returns "bar"
--- Given "c:\\foo\\bar" returns "bar"
-local function basename(s)
-	return string.gsub(s, "(.*[/\\])(.*)", "%2")
-end
-
 if wezterm.config_builder then
 	config = wezterm.config_builder()
 end
@@ -23,11 +16,9 @@ config.keys = {
 	{ key = 'C', mods = 'CTRL', action = act.CopyTo 'Clipboard' },
 	{ key = 'V', mods = 'CTRL', action = act.PasteFrom 'Clipboard' },
 	{ key = 'P', mods = 'CTRL', action = act.ActivateCommandPalette },
-	{ key = '-', mods = 'CTRL', action = act.DecreaseFontSize },
-	{ key = '=', mods = 'CTRL', action = act.IncreaseFontSize },
 }
 
-config.default_prog = { "/usr/bin/zellij", "-l", "welcome" }
+config.default_prog = { "@zellij@", "-l", "welcome" }
 config.launch_menu = {}
 
 if string.match(wezterm.target_triple, ".*linux.*") then

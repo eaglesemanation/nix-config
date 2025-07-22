@@ -100,5 +100,9 @@ in
       };
       browserpass.enable = true;
     };
+
+    systemd.user.sessionVariables = {
+      PASSWORD_STORE_DIR = "${config.xdg.dataHome}/pass-store";
+    };
   };
 }

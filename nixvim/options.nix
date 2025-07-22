@@ -66,17 +66,6 @@
     in
     helpers.keymaps.mkKeymaps { options.silent = true; } (
       modeKeys [ "n" ] {
-        # Window operations
-        "<leader>h" = "<cmd>wincmd h<cr>";
-        "<leader>j" = "<cmd>wincmd j<cr>";
-        "<leader>k" = "<cmd>wincmd k<cr>";
-        "<leader>l" = "<cmd>wincmd l<cr>";
-        "<leader>H" = "<cmd>wincmd H<cr>";
-        "<leader>J" = "<cmd>wincmd J<cr>";
-        "<leader>K" = "<cmd>wincmd K<cr>";
-        "<leader>L" = "<cmd>wincmd L<cr>";
-        "<leader>-" = "<cmd>split<cr>";
-        "<leader>|" = "<cmd>vsplit<cr>";
         # Tab operations
         "<leader>tc" = "<cmd>tabclose<cr>";
         "<leader>tl" = "<cmd>tabnext<cr>";

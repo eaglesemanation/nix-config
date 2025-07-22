@@ -7,6 +7,23 @@
 let
   inherit (lib) mkEnableOption mkIf;
   cfg = config.emnt.terminal;
+
+  zellijWrapper = pkgs.writeShellScript "zellij-nix-wrapper" ''
+    if [ -e ~/.nix-profile/etc/profile.d/nix.sh ]; then
+        . ~/.nix-profile/etc/profile.d/nix.sh
+    fi
+    if [ -e ~/.nix-profile/etc/profile.d/hm-session-vars.sh ]; then
+        . ~/.nix-profile/etc/profile.d/hm-session-vars.sh
+    fi
+    exec ${lib.getExe pkgs.zellij} "$@"
+  '';
+
+  zellijPlugins = {
+    vim-zellij-navigator = builtins.fetchurl {
+      url = "https://github.com/hiasr/vim-zellij-navigator/releases/download/0.3.0/vim-zellij-navigator.wasm";
+      sha256 = "sha256:13f54hf77bwcqhsbmkvpv07pwn3mblyljx15my66j6kw5zva5rbp";
+    };
+  };
 in
 {
   options = {
@@ -21,18 +38,15 @@ in
     programs.wezterm = {
       enable = true;
       package = config.lib.nixGL.wrap pkgs.wezterm;
-      extraConfig = builtins.replaceStrings [ "/usr/bin/zellij" ] [ "${lib.getExe pkgs.zellij}" ] (
-        lib.strings.fileContents ./wezconfig.lua
-      );
+    };
+    xdg.configFile."wezterm/wezterm.lua".source = pkgs.replaceVars ./wezterm.lua {
+      zellij = if config.targets.genericLinux.enable then zellijWrapper else (lib.getExe pkgs.zellij);
     };
 
-    programs.zellij = {
-      enable = true;
-      settings = {
-        theme = "everforest-dark";
-        default_shell = "${lib.getExe pkgs.fish}";
-        show_startup_tips = false;
-      };
+    programs.zellij.enable = true;
+    xdg.configFile."zellij/config.kdl".source = pkgs.replaceVars ./zellij.kdl {
+      inherit (zellijPlugins) vim-zellij-navigator;
+      fish = lib.getExe pkgs.fish;
     };
 
     home.shell.enableFishIntegration = true;

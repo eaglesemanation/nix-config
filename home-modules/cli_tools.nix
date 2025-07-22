@@ -57,7 +57,7 @@ in
       git = {
         enable = true;
         lfs.enable = true;
-        difftastic.enable = true;
+        difftastic.enableAsDifftool = true;
         extraConfig = {
           rerere.enabled = true;
           column.ui = "auto";

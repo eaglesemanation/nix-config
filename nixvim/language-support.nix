@@ -100,7 +100,10 @@ in
       aerial.enable = true;
 
       # Language specific functionality in a server
-      lsp.enable = true;
+      lsp = {
+        enable = true;
+        servers.typos_lsp.enable = true;
+      };
       # Import project specific LSP config from .vscode/settings.json
       neoconf.enable = true;
       # Formatters integration
@@ -187,18 +190,42 @@ in
           "<leader>st" = "<cmd>Telescope lsp_type_definitions<cr>";
 
           "<leader>se" = "<cmd>lua vim.diagnostic.open_float()<cr>";
-          "<leader>sf" = "<cmd>lua require('conform').format()<cr>";
-          "<leader>sF" = "<cmd>let b:disable_autoformat = 1<cr>";
+          "<leader>sf" = {
+            action = "<cmd>lua require('conform').format()<cr>";
+            options.desc = "Format current buffer";
+          };
+          "<leader>sF" = {
+            action = "<cmd>let b:disable_autoformat = 1<cr>";
+            options.desc = "Disable format on save for current buffer";
+          };
           "<leader>sh" = "<cmd>lua vim.lsp.buf.hover()<cr>";
           "<leader>sr" = "<cmd>lua vim.lsp.buf.rename()<cr>";
           "<leader>sa" = "<cmd>lua vim.lsp.buf.code_action()<cr>";
 
-          "<leader>tt" = "<cmd>Neotest run<cr>";
-          "<leader>td" = "<cmd>lua require('neotest').run.run({ strategy = 'dap' })<cr>";
-          "<leader>tf" = "<cmd>Neotest run file<cr>";
-          "<leader>tT" = "<cmd>lua require('neotest').run.run(vim.fn.getcwd())<cr>";
-          "<leader>ts" = "<cmd>Neotest stop<cr>";
-          "<leader>tu" = "<cmd>Neotest summary<cr><cmd>Neotest output-panel<cr>";
+          "<leader>tt" = {
+            action = "<cmd>Neotest run<cr>";
+            options.desc = "Run a test under cursor";
+          };
+          "<leader>td" = {
+            action = "<cmd>lua require('neotest').run.run({ strategy = 'dap' })<cr>";
+            options.desc = "Attach a debugger to a test under cursor";
+          };
+          "<leader>tf" = {
+            action = "<cmd>Neotest run file<cr>";
+            options.desc = "Run all tests in current file";
+          };
+          "<leader>tT" = {
+            action = "<cmd>lua require('neotest').run.run(vim.fn.getcwd())<cr>";
+            options.desc = "Run all tests in current working directory";
+          };
+          "<leader>ts" = {
+            action = "<cmd>Neotest stop<cr>";
+            options.desc = "Stop running tests";
+          };
+          "<leader>tu" = {
+            action = "<cmd>Neotest summary<cr><cmd>Neotest output-panel<cr>";
+            options.desc = "Show Neotest summary and output panels";
+          };
 
           "<leader>dc" = "<cmd>DapContinue<cr>";
           "<leader>db" = "<cmd>DapToggleBreakpoint<cr>";
@@ -213,5 +240,23 @@ in
           "<leader>dt" = "<cmd>DapTerminate<cr>";
         }
       );
+
+    plugins.which-key.settings.spec = [
+      {
+        __unkeyed = "<leader>s";
+        group = "LSP server commands";
+        icon = " ";
+      }
+      {
+        __unkeyed = "<leader>t";
+        group = "Testing and Tabs";
+        icon = "󰙨 ";
+      }
+      {
+        __unkeyed = "<leader>d";
+        group = "Debugging";
+        icon = " ";
+      }
+    ];
   };
 }
