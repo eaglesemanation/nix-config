@@ -28,6 +28,8 @@
         "overseer.nvim"
         "conform.nvim"
         "typst-preview.nvim"
+        "mini.nvim"
+        "oil.nvim"
       ];
     };
   };

@@ -34,35 +34,24 @@
     gitsigns.enable = true;
     neogit = {
       enable = true;
-      settings.integrations.telescope = true;
+      settings.integrations.mini_pick = true;
     };
     diffview.enable = true;
 
     rainbow-delimiters.enable = true;
     web-devicons.enable = true;
-    # Search glyphs from nerdfonts
-    nerdy.enable = true;
-    # Fuzzy searcher
-    telescope = {
+    mini = {
       enable = true;
-      extensions = {
-        file-browser.enable = true;
-        ui-select.enable = true;
-        fzf-native.enable = true;
+      modules = {
+        pick = { };
+        extra = { };
       };
-      settings = {
-        defaults = {
-          mappings.i = {
-            "<esc>" = helpers.mkRaw "require('telescope.actions').close";
-          };
-        };
-      };
+      luaConfig.post = # lua
+        ''
+          vim.ui.select = require('mini.pick').ui_select
+        '';
     };
-    # Bookmarks git folders as projects
-    project-nvim = {
-      enable = true;
-      enableTelescope = true;
-    };
+    oil.enable = true;
     auto-session.enable = true;
 
     which-key.enable = true;
@@ -75,28 +64,22 @@
     helpers.keymaps.mkKeymaps { options.silent = true; } (
       modeKeys [ "n" ] {
         "<leader>ff" = {
-          action = "<cmd>Telescope find_files hidden=true find_command=fd,--type,f,--color,never<cr>";
+          action = "<cmd>Pick files<cr>";
           options.desc = "Fuzzy search for files recursively";
         };
         "<leader>fg" = {
-          action = "<cmd>Telescope live_grep<cr>";
+          action = "<cmd>Pick grep_live<cr>";
           options.desc = "Grep through contents of files";
         };
         "<leader>fb" = {
-          action = "<cmd>Telescope file_browser cwd=%:p:h<cr>";
+          action = "<cmd>Oil<cr>";
           options.desc = "Open a file browser";
         };
         "<leader>fs" = {
-          action = "<cmd>Telescope aerial<cr>";
-          options.desc = "Search for symbols";
-        };
-        "<leader>fS" = {
           action = "<cmd>SessionSearch<cr>";
           options.desc = "Search for sessions";
         };
-        "<leader>fd" = "<cmd>Telescope diagnostics<cr>";
-        "<leader>fp" = "<cmd>Telescope projects<cr>";
-        "<leader>fn" = "<cmd>Telescope nerdy<cr>";
+        "<leader>fd" = "<cmd>Pick diagnostic scope='current'<cr>";
 
         "<leader>gg" = "<cmd>Neogit<cr>";
         "<leader>gb" = "<cmd>Neogit branch<cr>";

@@ -3,6 +3,8 @@ default_shell "@fish@"
 show_startup_tips false
 pane_viewport_serialization true
 scrollback_lines_to_serialize 10000
+// Fix for nixvim wrapped neovim
+post_command_discovery_hook "echo \"$RESURRECT_COMMAND\" | sed 's| --cmd .*-vim-pack-dir||g; s|/etc/profiles/per-user/$USER/bin/||g; s|/nix/store/.*/bin/||g'"
 
 plugins {
   vim-zellij-navigator location="file:@vim-zellij-navigator@" { }

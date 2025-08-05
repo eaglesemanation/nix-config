@@ -96,8 +96,8 @@ in
         };
       };
       treesitter-textobjects.enable = true;
+      treesitter-context.enable = true;
       guess-indent.enable = true;
-      aerial.enable = true;
 
       # Language specific functionality in a server
       lsp = {
@@ -110,7 +110,7 @@ in
       conform-nvim = {
         enable = true;
         settings = {
-          format_on_save = # Lua
+          format_on_save = # lua
             ''
               function(bufnr)
                 if vim.g.disable_autoformat or vim.b[bufnr].disable_autoformat then
@@ -184,10 +184,10 @@ in
       in
       helpers.keymaps.mkKeymaps { options.silent = true; } (
         modeKeys [ "n" ] {
-          "<leader>sd" = "<cmd>Telescope lsp_definitions<cr>";
-          "<leader>sD" = "<cmd>Telescope lsp_references<cr>";
-          "<leader>si" = "<cmd>Telescope lsp_implementations<cr>";
-          "<leader>st" = "<cmd>Telescope lsp_type_definitions<cr>";
+          "<leader>sd" = "<cmd>Pick lsp scope='definition'<cr>";
+          "<leader>sD" = "<cmd>Pick lsp scope='references'<cr>";
+          "<leader>si" = "<cmd>Pick lsp scope='implementation'<cr>";
+          "<leader>st" = "<cmd>Pick lsp scope='type_definition'<cr>";
 
           "<leader>se" = "<cmd>lua vim.diagnostic.open_float()<cr>";
           "<leader>sf" = {
