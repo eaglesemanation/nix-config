@@ -7,8 +7,9 @@
     };
     nvim-surround.enable = true;
 
-    # Compatability with cmp-nvim
+    # Compatibility with cmp-nvim
     blink-compat.enable = true;
+    cmp-dap.enable = true;
     # Autocompletion plugin
     blink-cmp = {
       enable = true;

@@ -1,4 +1,8 @@
-{ lib, helpers, ... }:
+{
+  lib,
+  helpers,
+  ...
+}:
 {
   plugins = {
     # Show LSP status in the corner
@@ -43,7 +47,19 @@
     mini = {
       enable = true;
       modules = {
-        pick = { };
+        pick = {
+          mappings = {
+            choose_all = {
+              char = "<C-q>";
+              func = lib.nixvim.mkRaw ''
+                function()
+                  local mappings = MiniPick.get_picker_opts().mappings
+                  vim.api.nvim_input(mappings.mark_all .. mappings.choose_marked)
+                end
+              '';
+            };
+          };
+        };
         extra = { };
       };
       luaConfig.post = # lua
@@ -55,6 +71,11 @@
     auto-session.enable = true;
 
     which-key.enable = true;
+  };
+
+  colorschemes.everforest = {
+    enable = true;
+    settings.background = "hard";
   };
 
   keymaps =

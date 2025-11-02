@@ -4,11 +4,6 @@
   ...
 }:
 {
-  colorschemes.everforest = {
-    settings.background = "hard";
-    enable = true;
-  };
-
   globals = {
     mapleader = " ";
     maplocalleader = " ";

@@ -1,7 +1,6 @@
 {
   lib,
   config,
-  helpers,
   ...
 }:
 lib.mkIf (builtins.elem "yaml" config.emnt.lang_support.langs) {

@@ -17,6 +17,8 @@ let
     hasSuffix
     ;
 
+  inherit (lib.nixvim) mkRaw;
+
   langFilenames = attrNames (
     filterAttrs (n: v: v == "regular" && (hasSuffix ".nix" n)) (builtins.readDir ./languages)
   );
@@ -96,7 +98,10 @@ in
         };
       };
       treesitter-textobjects.enable = true;
-      treesitter-context.enable = true;
+      treesitter-context = {
+        enable = true;
+        settings.max_lines = 5;
+      };
       guess-indent.enable = true;
 
       # Language specific functionality in a server
@@ -104,6 +109,8 @@ in
         enable = true;
         servers.typos_lsp.enable = true;
       };
+      # Linter integration into LSP
+      lint.enable = true;
       # Import project specific LSP config from .vscode/settings.json
       neoconf.enable = true;
       # Formatters integration
@@ -124,59 +131,96 @@ in
       };
 
       # Execute project specific tasks
-      overseer.enable = true;
-      compiler.enable = true;
+      overseer = {
+        enable = true;
+        settings.templates = [ "builtin" ];
+      };
 
       # Attaching a debugger to a process
-      dap.enable = true;
-      dap-virtual-text.enable = true;
-      dap-ui = {
+      dap = {
+        enable = true;
+        signs = {
+          dapBreakpoint = {
+            text = "󰄯";
+            texthl = "Red";
+          };
+          dapBreakpointCondition = {
+            text = "󰟃";
+            texthl = "Red";
+          };
+          dapBreakpointRejected = {
+            text = "";
+            texthl = "Red";
+          };
+          dapLogPoint = {
+            text = "";
+            texthl = "Green";
+          };
+          dapStopped = {
+            text = "";
+            texthl = "Green";
+          };
+        };
+      };
+      dap-view = {
         enable = true;
         settings = {
-          layouts = [
-            {
-              elements = [
-                {
-                  id = "scopes";
-                  size = 0.25;
-                }
-                {
-                  id = "breakpoints";
-                  size = 0.25;
-                }
-                {
-                  id = "stacks";
-                  size = 0.25;
-                }
-                {
-                  id = "watches";
-                  size = 0.25;
-                }
-              ];
-              position = "right";
-              size = 40;
-            }
-            {
-              elements = [
-                {
-                  id = "repl";
-                  size = 0.5;
-                }
-                {
-                  id = "console";
-                  size = 0.5;
-                }
-              ];
-              position = "bottom";
-              size = 10;
-            }
-          ];
+          auto_toggle = true;
+          winbar.controls.enabled = true;
         };
       };
 
       # Running unit tests
-      neotest.enable = true;
+      neotest = {
+        enable = true;
+        settings.consumers.overseer = mkRaw "require('neotest.consumers.overseer')";
+      };
     };
+
+    extraFiles."lua/overseer/component/nixvim/run_on_output.lua".text = # lua
+      ''
+        return {
+          desc = "Executes lua code once when a matching line is printed into stdout",
+          params = {
+            pattern = {
+              type = "string",
+              name = "Match pattern",
+            },
+            callback = {
+              type = "opaque",
+              name = "Function to call on match",
+              validate = function(callback)
+                return type(callback) == "function"
+              end,
+            },
+            oneshot = {
+              type = "boolean",
+              name = "Only run callback after first match",
+              default = false,
+            }
+          },
+          editable = false,
+          constructor = function(params)
+            return {
+              executed = false,
+              on_init = function(self, task)
+                self.executed = false
+              end,
+              on_output_lines = function(self, task, lines)
+                if params.oneshot and self.executed then
+                  return
+                end
+                for _, line in ipairs(lines) do
+                  if line:match(params.pattern) then
+                    params.callback(line, params.pattern)
+                    self.executed = true
+                  end
+                end
+              end,
+            }
+          end
+        }
+      '';
 
     keymaps =
       let
@@ -227,13 +271,14 @@ in
             options.desc = "Show Neotest summary and output panels";
           };
 
+          "<leader>dr" = "<cmd>OverseerRun<cr>";
           "<leader>dc" = "<cmd>DapContinue<cr>";
           "<leader>db" = "<cmd>DapToggleBreakpoint<cr>";
           "<leader>dB" = {
             action = "<cmd>lua require('dap').set_breakpoint(vim.fn.input('Enter breakpoint condition: '))<cr>";
             options.desc = "Set a conditional breakpoint";
           };
-          "<leader>du" = "<cmd>lua require('dapui').toggle()<cr>";
+          "<leader>du" = "<cmd>DapViewToggle<cr>";
           "<leader>ds" = "<cmd>DapStepOver<cr>";
           "<leader>di" = "<cmd>DapStepInto<cr>";
           "<leader>do" = "<cmd>DapStepOut<cr>";

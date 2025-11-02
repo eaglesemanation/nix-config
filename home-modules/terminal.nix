@@ -8,20 +8,6 @@ let
   inherit (lib) mkEnableOption mkIf;
   cfg = config.emnt.terminal;
 
-  # Using this until post_command_discovery_hook becomes available
-  zellijUnstable = pkgs.zellij.overrideAttrs (oldAttrs: rec {
-    version = "0.43.0";
-    src = oldAttrs.src.override {
-      tag = null;
-      rev = "b634a57de8f0025de36dd19e3e7916d2b27e38cd";
-      hash = "sha256-a0JJD+9neYOyDx/gAxPIdthTg695ShU93palExu3Vvo=";
-    };
-    cargoDeps = pkgs.rustPlatform.fetchCargoVendor {
-      inherit src;
-      hash = "sha256-P4VabkEFBvj2YkkhXqH/JZp3m3WMKcr0qUMhdorEm1Q=";
-    };
-  });
-
   zellijWrapper = pkgs.writeShellScript "zellij-nix-wrapper" ''
     if [ -e ~/.nix-profile/etc/profile.d/nix.sh ]; then
         . ~/.nix-profile/etc/profile.d/nix.sh
@@ -29,7 +15,7 @@ let
     if [ -e ~/.nix-profile/etc/profile.d/hm-session-vars.sh ]; then
         . ~/.nix-profile/etc/profile.d/hm-session-vars.sh
     fi
-    exec ${lib.getExe zellijUnstable} "$@"
+    exec ${lib.getExe pkgs.zellij} "$@"
   '';
 
   zellijPlugins = {
@@ -42,28 +28,28 @@ let
   alacrittyThemes = {
     everforest_dark_hard = {
       primary = {
-        background = "#272e33";
-        foreground = "#d3c6aa";
+        background = "#272E33";
+        foreground = "#D3C6AA";
       };
       normal = {
-        black = "#414b50";
-        red = "#e67e80";
-        green = "#a7c080";
-        yellow = "#dbbc7f";
-        blue = "#7fbbb3";
-        magenta = "#d699b6";
-        cyan = "#83c092";
-        white = "#d3c6aa";
+        black = "#2E383C";
+        red = "#E67E80";
+        green = "#A7C080";
+        yellow = "#DBBC7F";
+        blue = "#7FBBB3";
+        magenta = "#D699B6";
+        cyan = "#83C092";
+        white = "#D3C6AA";
       };
       bright = {
-        black = "#475258";
-        red = "#e67e80";
-        green = "#a7c080";
-        yellow = "#dbbc7f";
-        blue = "#7fbbb3";
-        magenta = "#d699b6";
-        cyan = "#83c092";
-        white = "#d3c6aa";
+        black = "#5C6A72";
+        red = "#F85552";
+        green = "#8DA101";
+        yellow = "#DFA000";
+        blue = "#3A94C5";
+        magenta = "#DF69BA";
+        cyan = "#35A77C";
+        white = "#DFDDC8";
       };
     };
 
@@ -98,10 +84,7 @@ in
       };
     };
 
-    programs.zellij = {
-      enable = true;
-      package = zellijUnstable;
-    };
+    programs.zellij.enable = true;
     xdg.configFile."zellij/config.kdl".source = pkgs.replaceVars ./zellij.kdl {
       inherit (zellijPlugins) vim-zellij-navigator;
       fish = lib.getExe pkgs.fish;
@@ -116,8 +99,8 @@ in
           set data_home "$XDG_DATA_HOME"
           test -z "$data_home"; and set data_home "$HOME/.local/share"
           set session_dir "$data_home/nvim/sessions/"
-          set session_path $(ls "$session_dir" | sed 's/%2F/\//g; s/%2E/./g; s/.vim$//' | sk --query "$1" --select-1)
-          cd "$session_path"
+          set session_path $(ls "$session_dir" | sed 's/%2F/\//g; s/%2E/./g; s/.vim$//' | sk --query "$argv[1]" --select-1)
+          test -n "$session_path"; and cd "$session_path"
         '';
       };
     };
