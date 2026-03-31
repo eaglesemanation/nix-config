@@ -1,0 +1,8 @@
+keys:
+  - &yubikey_20569449_age age1yubikey1qg69ltc78unjzscxta280tvcn6dzanwx8vqgk22rlm04yvvkwmh922qs29a
+  - &yubikey_28835247_age age1yubikey1q2rxawf5zugxah0lmfv59twj2n86gxqf5jksnf5vwu4axcx90crtqsfc74q
+creation_rules:
+  - path_regex: .*\.sops\.ya?ml$
+    age:
+      - *yubikey_20569449_age
+      - *yubikey_28835247_age
