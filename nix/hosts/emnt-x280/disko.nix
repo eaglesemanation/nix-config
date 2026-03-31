@@ -29,7 +29,6 @@ in {
                 content = {
                   type = "luks";
                   name = "cryptroot";
-                  passwordFile = "/tmp/secret.key";
                   settings.allowDiscards = true;
                   content = {
                     type = "btrfs";

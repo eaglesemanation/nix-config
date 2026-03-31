@@ -3,14 +3,14 @@
   inputs,
   ...
 }: {
-  flake.nixosModules.base = {
+  flake.nixosModules.desktop = {
     pkgs,
     lib,
     ...
   }: {
-    # Modules that act as desktop environment
     imports = [
-      self.flake.nixosModules.niri
+      self.nixosModules.niri
     ];
+    environment.systemPackages = with pkgs; [ghostty];
   };
 }

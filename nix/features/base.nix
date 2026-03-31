@@ -8,10 +8,15 @@
     lib,
     ...
   }: {
-    # Modules that should be included on every personal device
     imports = [
-      self.flake.nixosModules.secureBoot
-      self.flake.nixosModules.sops
+      self.nixosModules.secureBoot
+      self.nixosModules.network
+      self.nixosModules.sops
     ];
+
+    users.users.eaglesemanation = {
+      isNormalUser = true;
+      extraGroups = ["wheel"];
+    };
   };
 }
