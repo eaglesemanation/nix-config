@@ -20,6 +20,7 @@
       self.nixosModules.emnt-x280-hardware
       self.nixosModules.base
       self.nixosModules.desktop
+      self.nixosModules.home
     ];
     networking.hostName = "emnt-x280";
     time.timeZone = "America/Toronto";
